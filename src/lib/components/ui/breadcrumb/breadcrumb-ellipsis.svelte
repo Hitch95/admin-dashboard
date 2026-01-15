@@ -1,5 +1,5 @@
 <script>
-	import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
+	import EllipsisIcon from "lucide-svelte/icons/ellipsis";
 	import { cn } from "$lib/utils.js";
 
 	let {

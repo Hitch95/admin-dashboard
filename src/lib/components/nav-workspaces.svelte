@@ -1,8 +1,8 @@
 <script>
 	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-	import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
+	import ChevronRightIcon from 'lucide-svelte/icons/chevron-right';
+	import EllipsisIcon from 'lucide-svelte/icons/ellipsis';
 
 	let { workspaces } = $props();
 </script>

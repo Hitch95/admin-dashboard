@@ -1,12 +1,12 @@
 <script module>
-	import BellIcon from '@lucide/svelte/icons/bell';
-	import CalendarIcon from '@lucide/svelte/icons/calendar';
-	import DownloadIcon from '@lucide/svelte/icons/download';
-	import FilterIcon from '@lucide/svelte/icons/filter';
-	import PrinterIcon from '@lucide/svelte/icons/printer';
-	import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-	import ShareIcon from '@lucide/svelte/icons/share';
-	import SlidersHorizontalIcon from '@lucide/svelte/icons/sliders-horizontal';
+	import BellIcon from 'lucide-svelte/icons/bell';
+	import CalendarIcon from 'lucide-svelte/icons/calendar';
+	import DownloadIcon from 'lucide-svelte/icons/download';
+	import FilterIcon from 'lucide-svelte/icons/filter';
+	import PrinterIcon from 'lucide-svelte/icons/printer';
+	import RefreshCwIcon from 'lucide-svelte/icons/refresh-cw';
+	import ShareIcon from 'lucide-svelte/icons/share';
+	import SlidersHorizontalIcon from 'lucide-svelte/icons/sliders-horizontal';
 
 	const data = [
 		[
@@ -54,8 +54,8 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
-	import StarIcon from '@lucide/svelte/icons/star';
+	import EllipsisIcon from 'lucide-svelte/icons/ellipsis';
+	import StarIcon from 'lucide-svelte/icons/star';
 	import { untrack } from 'svelte';
 
 	let open = $state(false);

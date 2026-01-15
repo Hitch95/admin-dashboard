@@ -18,7 +18,7 @@
 
 <script>
 	import { Dialog as SheetPrimitive } from "bits-ui";
-	import XIcon from "@lucide/svelte/icons/x";
+	import XIcon from "lucide-svelte/icons/x";
 	import SheetPortal from "./sheet-portal.svelte";
 	import SheetOverlay from "./sheet-overlay.svelte";
 	import { cn } from "$lib/utils.js";

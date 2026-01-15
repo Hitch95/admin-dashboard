@@ -1,5 +1,5 @@
 <script>
-	import GalleryVerticalEndIcon from "@lucide/svelte/icons/gallery-vertical-end";
+	import GalleryVerticalEndIcon from "lucide-svelte/icons/gallery-vertical-end";
 	import {
 		FieldGroup,
 		Field,

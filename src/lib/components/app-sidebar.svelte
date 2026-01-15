@@ -1,13 +1,13 @@
 <script module>
-	import AudioWaveformIcon from '@lucide/svelte/icons/audio-waveform';
-	import CalendarIcon from '@lucide/svelte/icons/calendar';
-	import CommandIcon from '@lucide/svelte/icons/command';
-	import CreditCardIcon from '@lucide/svelte/icons/credit-card';
-	import HouseIcon from '@lucide/svelte/icons/house';
-	import MessageCircleQuestionIcon from '@lucide/svelte/icons/message-circle-question';
-	import SearchIcon from '@lucide/svelte/icons/search';
-	import Settings2Icon from '@lucide/svelte/icons/settings-2';
-	import UsersIcon from '@lucide/svelte/icons/users';
+	import AudioWaveformIcon from 'lucide-svelte/icons/audio-waveform';
+	import CalendarIcon from 'lucide-svelte/icons/calendar';
+	import CommandIcon from 'lucide-svelte/icons/command';
+	import CreditCardIcon from 'lucide-svelte/icons/credit-card';
+	import HouseIcon from 'lucide-svelte/icons/house';
+	import MessageCircleQuestionIcon from 'lucide-svelte/icons/message-circle-question';
+	import SearchIcon from 'lucide-svelte/icons/search';
+	import Settings2Icon from 'lucide-svelte/icons/settings-2';
+	import UsersIcon from 'lucide-svelte/icons/users';
 
 	const data = {
 		teams: [
