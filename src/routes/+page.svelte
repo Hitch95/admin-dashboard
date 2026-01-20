@@ -56,21 +56,21 @@
 	);
 
 	// ============================================
-	// PARTIE 3 : Rendu conditionnel avec {#if}
+	// PARTIE 3 - SOLUTION : Rendu conditionnel
 	// ============================================
-	// Documentation : https://svelte.dev/docs/svelte/if
-	// Objectif : Afficher des éléments conditionnellement selon l'état des données
 
-	// TODO 1: Créer une variable dérivée "hasNegativeGrowth"
-	// Elle doit être true si AU MOINS UNE des variations est négative
-	// Syntaxe : let hasNegativeGrowth = $derived(revenueChange < 0 || usersChange < 0 || ...);
+	// 1. Variable dérivée pour détecter une croissance négative
+	let hasNegativeGrowth = $derived(
+		revenueChange < 0 || usersChange < 0 || ordersChange < 0 || conversionChange < 0
+	);
 
-	// TODO 2: Créer un état booléen "showAlerts" initialisé à true
-	// Cet état permettra à l'utilisateur de masquer/afficher le bandeau d'alerte
-	// Syntaxe : let showAlerts = $state(true);
+	// 2. État pour gérer la visibilité des alertes
+	let showAlerts = $state(true);
 
-	// TODO 3: Créer une fonction "toggleAlerts" qui inverse showAlerts
-	// Syntaxe : const toggleAlerts = () => { showAlerts = !showAlerts; };
+	// 3. Fonction pour basculer l'état
+	const toggleAlerts = () => {
+		showAlerts = !showAlerts;
+	};
 </script>
 
 <Sidebar.Provider>
@@ -98,25 +98,33 @@
 					<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
 					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
 				</div>
-				<!-- TODO 4: Ajouter un bouton pour afficher/masquer les alertes -->
-				<!-- Le bouton doit appeler toggleAlerts au clic -->
-				<!-- Le texte doit changer selon showAlerts : "Masquer alertes" ou "Afficher alertes" -->
-				<!-- Indice : utiliser {#if showAlerts} ... {:else} ... {/if} dans le bouton -->
+
+				<!-- 4. Bouton Toggle avec texte conditionnel -->
+				<button onclick={toggleAlerts} class="text-sm text-primary hover:underline">
+					{#if showAlerts}
+						Masquer les alertes
+					{:else}
+						Afficher les alertes
+					{/if}
+				</button>
 			</div>
 
-			<!-- TODO 5: Afficher ce bandeau UNIQUEMENT SI showAlerts ET hasNegativeGrowth sont vrais -->
-			<!-- Syntaxe : {#if showAlerts && hasNegativeGrowth} ... {/if} -->
-			<div class="rounded-lg border border-orange-200 bg-orange-50 p-4 text-orange-800">
-				<div class="flex items-center gap-3">
-					<span class="text-2xl">⚠️</span>
-					<div>
-						<h3 class="font-semibold">Attention : Performances en baisse</h3>
-						<p class="text-sm opacity-90">
-							Certains indicateurs affichent une croissance négative.
-						</p>
+			<!-- 5. Bloc Alertes avec double condition -->
+			{#if showAlerts && hasNegativeGrowth}
+				<div
+					class="rounded-lg border border-orange-200 bg-orange-50 p-4 text-orange-800 transition-all"
+				>
+					<div class="flex items-center gap-3">
+						<span class="text-2xl">⚠️</span>
+						<div>
+							<h3 class="font-semibold">Attention : Performances en baisse</h3>
+							<p class="text-sm opacity-90">
+								Certains indicateurs affichent une croissance négative.
+							</p>
+						</div>
 					</div>
 				</div>
-			</div>
+			{/if}
 
 			<!-- Grille des 4 KPIs -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -133,13 +141,14 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedRevenue}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						<!-- TODO 6: Remplacer le ternaire par un bloc {#if} {:else} -->
-						<!-- Si revenueChange >= 0 : afficher en vert avec + -->
-						<!-- Sinon : afficher en rouge -->
-						<span class={revenueChange >= 0 ? 'text-green-600' : 'text-red-600'}>
-							{revenueChange >= 0 ? '+' : ''}{revenueChange}%
-						</span> vs mois dernier
+					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+						<!-- 6. Exemple de remplacement If/Else -->
+						{#if revenueChange >= 0}
+							<span class="font-medium text-green-600">+{revenueChange}%</span>
+						{:else}
+							<span class="font-medium text-red-600">{revenueChange}%</span>
+						{/if}
+						<span>vs mois dernier</span>
 					</p>
 				</div>
 
@@ -156,11 +165,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedUsers}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						<!-- TODO 7: Même chose pour usersChange -->
-						<span class={usersChange >= 0 ? 'text-green-600' : 'text-red-600'}>
-							{usersChange >= 0 ? '+' : ''}{usersChange}%
-						</span> vs mois dernier
+					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+						{#if usersChange >= 0}
+							<span class="font-medium text-green-600">+{usersChange}%</span>
+						{:else}
+							<span class="font-medium text-red-600">{usersChange}%</span>
+						{/if}
+						<span>vs mois dernier</span>
 					</p>
 				</div>
 
@@ -177,11 +188,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedOrders}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						<!-- TODO 8: Même chose pour ordersChange -->
-						<span class={ordersChange >= 0 ? 'text-green-600' : 'text-red-600'}>
-							{ordersChange >= 0 ? '+' : ''}{ordersChange}%
-						</span> vs mois dernier
+					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+						{#if ordersChange >= 0}
+							<span class="font-medium text-green-600">+{ordersChange}%</span>
+						{:else}
+							<span class="font-medium text-red-600">{ordersChange}%</span>
+						{/if}
+						<span>vs mois dernier</span>
 					</p>
 				</div>
 
@@ -198,11 +211,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedConversion}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						<!-- TODO 9: Même chose pour conversionChange -->
-						<span class={conversionChange >= 0 ? 'text-green-600' : 'text-red-600'}>
-							{conversionChange >= 0 ? '+' : ''}{conversionChange}%
-						</span> vs mois dernier
+					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+						{#if conversionChange >= 0}
+							<span class="font-medium text-green-600">+{conversionChange}%</span>
+						{:else}
+							<span class="font-medium text-red-600">{conversionChange}%</span>
+						{/if}
+						<span>vs mois dernier</span>
 					</p>
 				</div>
 			</div>
