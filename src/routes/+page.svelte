@@ -7,7 +7,7 @@
 	import { stats as initialStats } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 2 (Rappel) : Code de la solution précédente
+	// PARTIE 3 (Rappel) : Code de la solution précédente
 	// ============================================
 
 	let stats = $state({ ...initialStats });
@@ -28,6 +28,31 @@
 		stats.conversionRate = Math.max(0, stats.conversionRate + (Math.random() - 0.5));
 	};
 
+	// ============================================
+	// PARTIE 4 - TP : Boucles avec {#each}
+	// ============================================
+	// Objectif : Remplacer les 4 cartes KPI dupliquées par une boucle
+	// Documentation : https://svelte.dev/docs/svelte/each
+
+	// TODO 1: Créer un tableau réactif kpiCards avec $derived
+	// Chaque élément doit avoir : id, title, value, previousValue, icon, type, refresh
+	// Exemple :
+	// let kpiCards = $derived([
+	//   { id: 'revenue', title: "Revenu Total", value: stats.revenue, previousValue: stats.previousRevenue, icon: "💰", type: "currency", refresh: refreshRevenue },
+	//   { id: 'users', title: "Utilisateurs", value: stats.users, previousValue: stats.previousUsers, icon: "👥", type: "number", refresh: refreshUsers },
+	//   { id: 'orders', title: "Commandes", value: stats.orders, previousValue: stats.previousOrders, icon: "📦", type: "number", refresh: refreshOrders },
+	//   { id: 'conversion', title: "Taux de Conversion", value: stats.conversionRate, previousValue: stats.previousConversionRate, icon: "📈", type: "percent", refresh: refreshConversion },
+	// ]);
+
+	// TODO 2: Créer une fonction formatValue(value, type) qui formate selon le type
+	// - type "currency" → new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value)
+	// - type "number" → new Intl.NumberFormat('fr-FR').format(value)
+	// - type "percent" → value.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %'
+
+	// TODO 3: Créer une fonction calculateChange(current, previous)
+	// Formule : Math.round(((current - previous) / previous) * 1000) / 10
+
+	// Code actuel (à supprimer une fois la boucle implémentée)
 	let formattedRevenue = $derived(
 		new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(stats.revenue)
 	);
@@ -55,19 +80,11 @@
 		) / 10
 	);
 
-	// ============================================
-	// PARTIE 3 - SOLUTION : Rendu conditionnel
-	// ============================================
-
-	// 1. Variable dérivée pour détecter une croissance négative
+	// Alertes (Part 3)
 	let hasNegativeGrowth = $derived(
 		revenueChange < 0 || usersChange < 0 || ordersChange < 0 || conversionChange < 0
 	);
-
-	// 2. État pour gérer la visibilité des alertes
 	let showAlerts = $state(true);
-
-	// 3. Fonction pour basculer l'état
 	const toggleAlerts = () => {
 		showAlerts = !showAlerts;
 	};
@@ -98,8 +115,6 @@
 					<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
 					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
 				</div>
-
-				<!-- 4. Bouton Toggle avec texte conditionnel -->
 				<button onclick={toggleAlerts} class="text-sm text-primary hover:underline">
 					{#if showAlerts}
 						Masquer les alertes
@@ -109,7 +124,6 @@
 				</button>
 			</div>
 
-			<!-- 5. Bloc Alertes avec double condition -->
 			{#if showAlerts && hasNegativeGrowth}
 				<div
 					class="rounded-lg border border-orange-200 bg-orange-50 p-4 text-orange-800 transition-all"
@@ -126,7 +140,13 @@
 				</div>
 			{/if}
 
-			<!-- Grille des 4 KPIs -->
+			<!-- TODO 4: Remplacer les 4 cartes ci-dessous par une boucle {#each} -->
+			<!-- Syntaxe : {#each kpiCards as card (card.id)} ... {/each} -->
+			<!-- Dans chaque itération, utiliser {@const change = calculateChange(card.value, card.previousValue)} -->
+
+			<!-- TODO 5: Ajouter {:else} pour afficher "Aucune donnée" si tableau vide -->
+
+			<!-- Grille des 4 KPIs (code dupliqué à refactoriser) -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				<!-- KPI 1 : Revenu Total -->
 				<div class="rounded-xl border bg-card p-6">
@@ -141,14 +161,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedRevenue}</p>
-					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-						<!-- 6. Exemple de remplacement If/Else -->
+					<p class="mt-1 text-xs text-muted-foreground">
 						{#if revenueChange >= 0}
-							<span class="font-medium text-green-600">+{revenueChange}%</span>
+							<span class="text-green-600">↑ +{revenueChange}%</span>
 						{:else}
-							<span class="font-medium text-red-600">{revenueChange}%</span>
+							<span class="text-red-600">↓ {revenueChange}%</span>
 						{/if}
-						<span>vs mois dernier</span>
+						vs mois dernier
 					</p>
 				</div>
 
@@ -165,13 +184,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedUsers}</p>
-					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+					<p class="mt-1 text-xs text-muted-foreground">
 						{#if usersChange >= 0}
-							<span class="font-medium text-green-600">+{usersChange}%</span>
+							<span class="text-green-600">↑ +{usersChange}%</span>
 						{:else}
-							<span class="font-medium text-red-600">{usersChange}%</span>
+							<span class="text-red-600">↓ {usersChange}%</span>
 						{/if}
-						<span>vs mois dernier</span>
+						vs mois dernier
 					</p>
 				</div>
 
@@ -188,13 +207,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedOrders}</p>
-					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+					<p class="mt-1 text-xs text-muted-foreground">
 						{#if ordersChange >= 0}
-							<span class="font-medium text-green-600">+{ordersChange}%</span>
+							<span class="text-green-600">↑ +{ordersChange}%</span>
 						{:else}
-							<span class="font-medium text-red-600">{ordersChange}%</span>
+							<span class="text-red-600">↓ {ordersChange}%</span>
 						{/if}
-						<span>vs mois dernier</span>
+						vs mois dernier
 					</p>
 				</div>
 
@@ -211,13 +230,13 @@
 						</button>
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedConversion}</p>
-					<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+					<p class="mt-1 text-xs text-muted-foreground">
 						{#if conversionChange >= 0}
-							<span class="font-medium text-green-600">+{conversionChange}%</span>
+							<span class="text-green-600">↑ +{conversionChange}%</span>
 						{:else}
-							<span class="font-medium text-red-600">{conversionChange}%</span>
+							<span class="text-red-600">↓ {conversionChange}%</span>
 						{/if}
-						<span>vs mois dernier</span>
+						vs mois dernier
 					</p>
 				</div>
 			</div>
