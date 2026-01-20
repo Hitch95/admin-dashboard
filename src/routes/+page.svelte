@@ -4,94 +4,66 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	// On importe les données mock et on les renomme en "initialStats"
-	// Cela nous permettra de créer une copie modifiable
 	import { stats as initialStats } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 2 : La réactivité avec $state et $derived
+	// PARTIE 2 - SOLUTION : La réactivité avec $state et $derived
 	// ============================================
-	//
-	// Objectif : Rendre ce dashboard interactif !
-	// - Afficher les KPIs avec un formatage propre (monétaire, pourcentages)
-	// - Permettre de "rafraîchir" chaque carte individuellement
-	//
-	// Concepts clés :
-	// - $state(valeur) : crée une variable réactive (modifiable)
-	// - $derived(expression) : crée une valeur calculée automatiquement mise à jour
-	//
-	// Au départ, vous verrez des valeurs brutes (45231.89) et des boutons inactifs.
-	// À la fin, les valeurs seront formatées et chaque bouton actualisera sa carte !
 
-	// TODO 1: Créer un état réactif "stats" à partir de "initialStats"
-	//
-	// Pourquoi ? Les données importées sont en lecture seule.
-	// On doit créer une copie locale pour pouvoir les modifier.
-	//
-	// Syntaxe : let stats = $state({ ...initialStats });
-	//
-	// Pour l'instant, on utilise directement initialStats (non réactif) :
-	let stats = initialStats;
+	// 1. État réactif : copie modifiable des données importées
+	let stats = $state({ ...initialStats });
 
-	// TODO 2: Créer des fonctions pour rafraîchir chaque KPI individuellement
-	//
-	// Chaque carte aura son propre bouton de rafraîchissement.
-	// Créez 4 fonctions qui modifient une seule propriété de "stats".
-	//
-	// Exemple pour le revenu :
-	//   function refreshRevenue() {
-	//     stats.revenue = stats.revenue + (Math.random() - 0.45) * 5000;
-	//   }
-	//
-	// Pour l'instant, les fonctions affichent juste un log :
-	function refreshRevenue() {
-		console.log('Rafraîchir Revenu - Implémentez $state pour voir la magie !');
-	}
+	// 2. Fonctions de rafraîchissement individuelles
+	const refreshRevenue = () => {
+		stats.revenue = stats.revenue + (Math.random() - 0.45) * 5000;
+	};
 
 	const refreshUsers = () => {
-		console.log('Rafraîchir Utilisateurs');
+		stats.users = Math.max(0, Math.floor(stats.users + (Math.random() - 0.45) * 100));
 	};
 
 	const refreshOrders = () => {
-		console.log('Rafraîchir Commandes');
+		stats.orders = Math.max(0, Math.floor(stats.orders + (Math.random() - 0.45) * 50));
 	};
 
 	const refreshConversion = () => {
-		console.log('Rafraîchir Taux de Conversion');
+		stats.conversionRate = Math.max(0, stats.conversionRate + (Math.random() - 0.5));
 	};
 
-	// TODO 3: Créer une variable dérivée "formattedRevenue"
-	//
-	// Elle doit formater "stats.revenue" en devise EUR (ex: "45 231,89 €")
-	// Utiliser : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(...)
-	//
-	// Syntaxe : let formattedRevenue = $derived(...);
+	// 3. Variables dérivées pour le formatage
+	let formattedRevenue = $derived(
+		new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(stats.revenue)
+	);
 
-	// TODO 4: Créer une variable dérivée "formattedUsers"
-	//
-	// Elle doit formater "stats.users" avec séparateur de milliers (ex: "2 350")
-	// Utiliser : new Intl.NumberFormat('fr-FR').format(...)
+	let formattedUsers = $derived(new Intl.NumberFormat('fr-FR').format(stats.users));
 
-	// TODO 5: Créer une variable dérivée "formattedOrders"
-	//
-	// Même principe que formattedUsers pour stats.orders
+	let formattedOrders = $derived(new Intl.NumberFormat('fr-FR').format(stats.orders));
 
-	// TODO 6: Créer une variable dérivée "formattedConversion"
-	//
-	// Elle doit afficher stats.conversionRate avec 1 décimale et le symbole %
-	// Utiliser : stats.conversionRate.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %'
+	let formattedConversion = $derived(
+		stats.conversionRate.toLocaleString('fr-FR', {
+			minimumFractionDigits: 1,
+			maximumFractionDigits: 1
+		}) + ' %'
+	);
 
-	// TODO 7: Créer une variable dérivée "revenueChange"
-	//
-	// Elle calcule la variation en % entre revenue et previousRevenue
-	// Formule : ((revenue - previousRevenue) / previousRevenue) * 100
-	// Arrondir à 1 décimale : Math.round(... * 10) / 10
+	// 4. Variables dérivées pour les variations en pourcentage
+	let revenueChange = $derived(
+		Math.round(((stats.revenue - stats.previousRevenue) / stats.previousRevenue) * 1000) / 10
+	);
 
-	// TODO 8: Créer "usersChange" (variation entre stats.users et stats.previousUsers)
+	let usersChange = $derived(
+		Math.round(((stats.users - stats.previousUsers) / stats.previousUsers) * 1000) / 10
+	);
 
-	// TODO 9: Créer "ordersChange" (variation entre stats.orders et stats.previousOrders)
+	let ordersChange = $derived(
+		Math.round(((stats.orders - stats.previousOrders) / stats.previousOrders) * 1000) / 10
+	);
 
-	// TODO 10: Créer "conversionChange" (variation entre stats.conversionRate et stats.previousConversionRate)
+	let conversionChange = $derived(
+		Math.round(
+			((stats.conversionRate - stats.previousConversionRate) / stats.previousConversionRate) * 1000
+		) / 10
+	);
 </script>
 
 <Sidebar.Provider>
@@ -125,7 +97,6 @@
 				<div class="rounded-xl border bg-card p-6">
 					<div class="flex items-center justify-between">
 						<p class="text-sm font-medium text-muted-foreground">Revenu Total</p>
-						<!-- Bouton de rafraîchissement individuel -->
 						<button
 							onclick={refreshRevenue}
 							class="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
@@ -134,12 +105,12 @@
 							↻
 						</button>
 					</div>
-					<!-- TODO 11: Remplacer {stats.revenue} par {formattedRevenue} -->
-					<p class="mt-2 text-2xl font-bold">{stats.revenue}</p>
-					<!-- TODO 12: Afficher revenueChange avec couleur conditionnelle -->
-					<!-- Syntaxe pour la couleur : class={revenueChange >= 0 ? 'text-green-600' : 'text-red-600'} -->
-					<!-- Syntaxe pour le signe : {revenueChange >= 0 ? '+' : ''}{revenueChange}% -->
-					<p class="mt-1 text-xs text-muted-foreground">+X% vs mois dernier</p>
+					<p class="mt-2 text-2xl font-bold">{formattedRevenue}</p>
+					<p class="mt-1 text-xs text-muted-foreground">
+						<span class={revenueChange >= 0 ? 'text-green-600' : 'text-red-600'}>
+							{revenueChange >= 0 ? '+' : ''}{revenueChange}%
+						</span> vs mois dernier
+					</p>
 				</div>
 
 				<!-- KPI 2 : Utilisateurs -->
@@ -154,10 +125,12 @@
 							↻
 						</button>
 					</div>
-					<!-- TODO 13: Remplacer par {formattedUsers} -->
-					<p class="mt-2 text-2xl font-bold">{stats.users}</p>
-					<!-- TODO 14: Afficher usersChange -->
-					<p class="mt-1 text-xs text-muted-foreground">+X% vs mois dernier</p>
+					<p class="mt-2 text-2xl font-bold">{formattedUsers}</p>
+					<p class="mt-1 text-xs text-muted-foreground">
+						<span class={usersChange >= 0 ? 'text-green-600' : 'text-red-600'}>
+							{usersChange >= 0 ? '+' : ''}{usersChange}%
+						</span> vs mois dernier
+					</p>
 				</div>
 
 				<!-- KPI 3 : Commandes -->
@@ -172,10 +145,12 @@
 							↻
 						</button>
 					</div>
-					<!-- TODO 15: Remplacer par {formattedOrders} -->
-					<p class="mt-2 text-2xl font-bold">{stats.orders}</p>
-					<!-- TODO 16: Afficher ordersChange -->
-					<p class="mt-1 text-xs text-muted-foreground">+X% vs mois dernier</p>
+					<p class="mt-2 text-2xl font-bold">{formattedOrders}</p>
+					<p class="mt-1 text-xs text-muted-foreground">
+						<span class={ordersChange >= 0 ? 'text-green-600' : 'text-red-600'}>
+							{ordersChange >= 0 ? '+' : ''}{ordersChange}%
+						</span> vs mois dernier
+					</p>
 				</div>
 
 				<!-- KPI 4 : Taux de Conversion -->
@@ -190,10 +165,12 @@
 							↻
 						</button>
 					</div>
-					<!-- TODO 17: Remplacer par {formattedConversion} -->
-					<p class="mt-2 text-2xl font-bold">{stats.conversionRate}</p>
-					<!-- TODO 18: Afficher conversionChange -->
-					<p class="mt-1 text-xs text-muted-foreground">+X% vs mois dernier</p>
+					<p class="mt-2 text-2xl font-bold">{formattedConversion}</p>
+					<p class="mt-1 text-xs text-muted-foreground">
+						<span class={conversionChange >= 0 ? 'text-green-600' : 'text-red-600'}>
+							{conversionChange >= 0 ? '+' : ''}{conversionChange}%
+						</span> vs mois dernier
+					</p>
 				</div>
 			</div>
 		</div>
