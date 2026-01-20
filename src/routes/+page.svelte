@@ -7,13 +7,11 @@
 	import { stats as initialStats } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 2 - SOLUTION : La réactivité avec $state et $derived
+	// PARTIE 2 (Rappel) : Code de la solution précédente
 	// ============================================
 
-	// 1. État réactif : copie modifiable des données importées
 	let stats = $state({ ...initialStats });
 
-	// 2. Fonctions de rafraîchissement individuelles
 	const refreshRevenue = () => {
 		stats.revenue = stats.revenue + (Math.random() - 0.45) * 5000;
 	};
@@ -30,15 +28,11 @@
 		stats.conversionRate = Math.max(0, stats.conversionRate + (Math.random() - 0.5));
 	};
 
-	// 3. Variables dérivées pour le formatage
 	let formattedRevenue = $derived(
 		new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(stats.revenue)
 	);
-
 	let formattedUsers = $derived(new Intl.NumberFormat('fr-FR').format(stats.users));
-
 	let formattedOrders = $derived(new Intl.NumberFormat('fr-FR').format(stats.orders));
-
 	let formattedConversion = $derived(
 		stats.conversionRate.toLocaleString('fr-FR', {
 			minimumFractionDigits: 1,
@@ -46,24 +40,37 @@
 		}) + ' %'
 	);
 
-	// 4. Variables dérivées pour les variations en pourcentage
 	let revenueChange = $derived(
 		Math.round(((stats.revenue - stats.previousRevenue) / stats.previousRevenue) * 1000) / 10
 	);
-
 	let usersChange = $derived(
 		Math.round(((stats.users - stats.previousUsers) / stats.previousUsers) * 1000) / 10
 	);
-
 	let ordersChange = $derived(
 		Math.round(((stats.orders - stats.previousOrders) / stats.previousOrders) * 1000) / 10
 	);
-
 	let conversionChange = $derived(
 		Math.round(
 			((stats.conversionRate - stats.previousConversionRate) / stats.previousConversionRate) * 1000
 		) / 10
 	);
+
+	// ============================================
+	// PARTIE 3 : Rendu conditionnel avec {#if}
+	// ============================================
+	// Documentation : https://svelte.dev/docs/svelte/if
+	// Objectif : Afficher des éléments conditionnellement selon l'état des données
+
+	// TODO 1: Créer une variable dérivée "hasNegativeGrowth"
+	// Elle doit être true si AU MOINS UNE des variations est négative
+	// Syntaxe : let hasNegativeGrowth = $derived(revenueChange < 0 || usersChange < 0 || ...);
+
+	// TODO 2: Créer un état booléen "showAlerts" initialisé à true
+	// Cet état permettra à l'utilisateur de masquer/afficher le bandeau d'alerte
+	// Syntaxe : let showAlerts = $state(true);
+
+	// TODO 3: Créer une fonction "toggleAlerts" qui inverse showAlerts
+	// Syntaxe : const toggleAlerts = () => { showAlerts = !showAlerts; };
 </script>
 
 <Sidebar.Provider>
@@ -86,9 +93,29 @@
 			</div>
 		</header>
 		<div class="flex flex-1 flex-col gap-6 p-6">
-			<div>
-				<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
-				<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
+			<div class="flex items-center justify-between">
+				<div>
+					<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
+				</div>
+				<!-- TODO 4: Ajouter un bouton pour afficher/masquer les alertes -->
+				<!-- Le bouton doit appeler toggleAlerts au clic -->
+				<!-- Le texte doit changer selon showAlerts : "Masquer alertes" ou "Afficher alertes" -->
+				<!-- Indice : utiliser {#if showAlerts} ... {:else} ... {/if} dans le bouton -->
+			</div>
+
+			<!-- TODO 5: Afficher ce bandeau UNIQUEMENT SI showAlerts ET hasNegativeGrowth sont vrais -->
+			<!-- Syntaxe : {#if showAlerts && hasNegativeGrowth} ... {/if} -->
+			<div class="rounded-lg border border-orange-200 bg-orange-50 p-4 text-orange-800">
+				<div class="flex items-center gap-3">
+					<span class="text-2xl">⚠️</span>
+					<div>
+						<h3 class="font-semibold">Attention : Performances en baisse</h3>
+						<p class="text-sm opacity-90">
+							Certains indicateurs affichent une croissance négative.
+						</p>
+					</div>
+				</div>
 			</div>
 
 			<!-- Grille des 4 KPIs -->
@@ -107,6 +134,9 @@
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedRevenue}</p>
 					<p class="mt-1 text-xs text-muted-foreground">
+						<!-- TODO 6: Remplacer le ternaire par un bloc {#if} {:else} -->
+						<!-- Si revenueChange >= 0 : afficher en vert avec + -->
+						<!-- Sinon : afficher en rouge -->
 						<span class={revenueChange >= 0 ? 'text-green-600' : 'text-red-600'}>
 							{revenueChange >= 0 ? '+' : ''}{revenueChange}%
 						</span> vs mois dernier
@@ -127,6 +157,7 @@
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedUsers}</p>
 					<p class="mt-1 text-xs text-muted-foreground">
+						<!-- TODO 7: Même chose pour usersChange -->
 						<span class={usersChange >= 0 ? 'text-green-600' : 'text-red-600'}>
 							{usersChange >= 0 ? '+' : ''}{usersChange}%
 						</span> vs mois dernier
@@ -147,6 +178,7 @@
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedOrders}</p>
 					<p class="mt-1 text-xs text-muted-foreground">
+						<!-- TODO 8: Même chose pour ordersChange -->
 						<span class={ordersChange >= 0 ? 'text-green-600' : 'text-red-600'}>
 							{ordersChange >= 0 ? '+' : ''}{ordersChange}%
 						</span> vs mois dernier
@@ -167,6 +199,7 @@
 					</div>
 					<p class="mt-2 text-2xl font-bold">{formattedConversion}</p>
 					<p class="mt-1 text-xs text-muted-foreground">
+						<!-- TODO 9: Même chose pour conversionChange -->
 						<span class={conversionChange >= 0 ? 'text-green-600' : 'text-red-600'}>
 							{conversionChange >= 0 ? '+' : ''}{conversionChange}%
 						</span> vs mois dernier
