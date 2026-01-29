@@ -1,0 +1,34 @@
+[
+	{
+		"id": "revenue",
+		"title": "Revenu Total",
+		"value": 45231.89,
+		"previousValue": 35000,
+		"icon": "💰",
+		"type": "currency"
+	},
+	{
+		"id": "users",
+		"title": "Utilisateurs",
+		"value": 2350,
+		"previousValue": 2100,
+		"icon": "👥",
+		"type": "number"
+	},
+	{
+		"id": "orders",
+		"title": "Commandes",
+		"value": 1205,
+		"previousValue": 1500,
+		"icon": "📦",
+		"type": "number"
+	},
+	{
+		"id": "conversion",
+		"title": "Taux de Conversion",
+		"value": 3.2,
+		"previousValue": 3.0,
+		"icon": "📈",
+		"type": "percent"
+	}
+]
