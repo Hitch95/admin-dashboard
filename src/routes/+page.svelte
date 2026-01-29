@@ -7,11 +7,12 @@
 	import { stats as initialStats } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 3 (Rappel) : Code de la solution précédente
+	// PARTIE 4 - SOLUTION : Boucles avec {#each}
 	// ============================================
 
 	let stats = $state({ ...initialStats });
 
+	// Fonctions de rafraîchissement
 	const refreshRevenue = () => {
 		stats.revenue = stats.revenue + (Math.random() - 0.45) * 5000;
 	};
@@ -28,62 +29,71 @@
 		stats.conversionRate = Math.max(0, stats.conversionRate + (Math.random() - 0.5));
 	};
 
-	// ============================================
-	// PARTIE 4 - TP : Boucles avec {#each}
-	// ============================================
-	// Objectif : Remplacer les 4 cartes KPI dupliquées par une boucle
-	// Documentation : https://svelte.dev/docs/svelte/each
+	// SOLUTION TODO 1: Tableau réactif des cartes KPI
+	let kpiCards = $derived([
+		{
+			id: 'revenue',
+			title: 'Revenu Total',
+			value: stats.revenue,
+			previousValue: stats.previousRevenue,
+			type: 'currency',
+			refresh: refreshRevenue
+		},
+		{
+			id: 'users',
+			title: 'Utilisateurs',
+			value: stats.users,
+			previousValue: stats.previousUsers,
+			type: 'number',
+			refresh: refreshUsers
+		},
+		{
+			id: 'orders',
+			title: 'Commandes',
+			value: stats.orders,
+			previousValue: stats.previousOrders,
+			type: 'number',
+			refresh: refreshOrders
+		},
+		{
+			id: 'conversion',
+			title: 'Taux de Conversion',
+			value: stats.conversionRate,
+			previousValue: stats.previousConversionRate,
+			type: 'percent',
+			refresh: refreshConversion
+		}
+	]);
 
-	// TODO 1: Créer un tableau réactif kpiCards avec $derived
-	// Chaque élément doit avoir : id, title, value, previousValue, icon, type, refresh
-	// Exemple :
-	// let kpiCards = $derived([
-	//   { id: 'revenue', title: "Revenu Total", value: stats.revenue, previousValue: stats.previousRevenue, icon: "💰", type: "currency", refresh: refreshRevenue },
-	//   { id: 'users', title: "Utilisateurs", value: stats.users, previousValue: stats.previousUsers, icon: "👥", type: "number", refresh: refreshUsers },
-	//   { id: 'orders', title: "Commandes", value: stats.orders, previousValue: stats.previousOrders, icon: "📦", type: "number", refresh: refreshOrders },
-	//   { id: 'conversion', title: "Taux de Conversion", value: stats.conversionRate, previousValue: stats.previousConversionRate, icon: "📈", type: "percent", refresh: refreshConversion },
-	// ]);
+	// SOLUTION TODO 2: Fonction de formatage selon le type
+	const formatValue = (value, type) => {
+		switch (type) {
+			case 'currency':
+				return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
+			case 'number':
+				return new Intl.NumberFormat('fr-FR').format(value);
+			case 'percent':
+				return (
+					value.toLocaleString('fr-FR', {
+						minimumFractionDigits: 1,
+						maximumFractionDigits: 1
+					}) + ' %'
+				);
+			default:
+				return value;
+		}
+	};
 
-	// TODO 2: Créer une fonction formatValue(value, type) qui formate selon le type
-	// - type "currency" → new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value)
-	// - type "number" → new Intl.NumberFormat('fr-FR').format(value)
-	// - type "percent" → value.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %'
+	// SOLUTION TODO 3: Fonction de calcul de variation
+	const calculateChange = (current, previous) => {
+		return Math.round(((current - previous) / previous) * 1000) / 10;
+	};
 
-	// TODO 3: Créer une fonction calculateChange(current, previous)
-	// Formule : Math.round(((current - previous) / previous) * 1000) / 10
-
-	// Code actuel (à supprimer une fois la boucle implémentée)
-	let formattedRevenue = $derived(
-		new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(stats.revenue)
-	);
-	let formattedUsers = $derived(new Intl.NumberFormat('fr-FR').format(stats.users));
-	let formattedOrders = $derived(new Intl.NumberFormat('fr-FR').format(stats.orders));
-	let formattedConversion = $derived(
-		stats.conversionRate.toLocaleString('fr-FR', {
-			minimumFractionDigits: 1,
-			maximumFractionDigits: 1
-		}) + ' %'
-	);
-
-	let revenueChange = $derived(
-		Math.round(((stats.revenue - stats.previousRevenue) / stats.previousRevenue) * 1000) / 10
-	);
-	let usersChange = $derived(
-		Math.round(((stats.users - stats.previousUsers) / stats.previousUsers) * 1000) / 10
-	);
-	let ordersChange = $derived(
-		Math.round(((stats.orders - stats.previousOrders) / stats.previousOrders) * 1000) / 10
-	);
-	let conversionChange = $derived(
-		Math.round(
-			((stats.conversionRate - stats.previousConversionRate) / stats.previousConversionRate) * 1000
-		) / 10
-	);
-
-	// Alertes (Part 3)
+	// Alertes (Part 3) - mise à jour pour utiliser kpiCards
 	let hasNegativeGrowth = $derived(
-		revenueChange < 0 || usersChange < 0 || ordersChange < 0 || conversionChange < 0
+		kpiCards.some((card) => calculateChange(card.value, card.previousValue) < 0)
 	);
+
 	let showAlerts = $state(true);
 	const toggleAlerts = () => {
 		showAlerts = !showAlerts;
@@ -140,105 +150,34 @@
 				</div>
 			{/if}
 
-			<!-- TODO 4: Remplacer les 4 cartes ci-dessous par une boucle {#each} -->
-			<!-- Syntaxe : {#each kpiCards as card (card.id)} ... {/each} -->
-			<!-- Dans chaque itération, utiliser {@const change = calculateChange(card.value, card.previousValue)} -->
-
-			<!-- TODO 5: Ajouter {:else} pour afficher "Aucune donnée" si tableau vide -->
-
-			<!-- Grille des 4 KPIs (code dupliqué à refactoriser) -->
+			<!-- SOLUTION TODO 4 & 5: Boucle {#each} avec clé et {:else} -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-				<!-- KPI 1 : Revenu Total -->
-				<div class="rounded-xl border bg-card p-6">
-					<div class="flex items-center justify-between">
-						<p class="text-sm font-medium text-muted-foreground">Revenu Total</p>
-						<button
-							onclick={refreshRevenue}
-							class="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
-							title="Actualiser"
-						>
-							↻
-						</button>
+				{#each kpiCards as card (card.id)}
+					{@const change = calculateChange(card.value, card.previousValue)}
+					<div class="rounded-xl border bg-card p-6">
+						<div class="flex items-center justify-between">
+							<p class="text-sm font-medium text-muted-foreground">{card.title}</p>
+							<button
+								onclick={card.refresh}
+								class="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
+								title="Actualiser"
+							>
+								↻
+							</button>
+						</div>
+						<p class="mt-2 text-2xl font-bold">{formatValue(card.value, card.type)}</p>
+						<p class="mt-1 text-xs text-muted-foreground">
+							{#if change >= 0}
+								<span class="text-green-600">↑ +{change}%</span>
+							{:else}
+								<span class="text-red-600">↓ {change}%</span>
+							{/if}
+							vs mois dernier
+						</p>
 					</div>
-					<p class="mt-2 text-2xl font-bold">{formattedRevenue}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						{#if revenueChange >= 0}
-							<span class="text-green-600">↑ +{revenueChange}%</span>
-						{:else}
-							<span class="text-red-600">↓ {revenueChange}%</span>
-						{/if}
-						vs mois dernier
-					</p>
-				</div>
-
-				<!-- KPI 2 : Utilisateurs -->
-				<div class="rounded-xl border bg-card p-6">
-					<div class="flex items-center justify-between">
-						<p class="text-sm font-medium text-muted-foreground">Utilisateurs</p>
-						<button
-							onclick={refreshUsers}
-							class="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
-							title="Actualiser"
-						>
-							↻
-						</button>
-					</div>
-					<p class="mt-2 text-2xl font-bold">{formattedUsers}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						{#if usersChange >= 0}
-							<span class="text-green-600">↑ +{usersChange}%</span>
-						{:else}
-							<span class="text-red-600">↓ {usersChange}%</span>
-						{/if}
-						vs mois dernier
-					</p>
-				</div>
-
-				<!-- KPI 3 : Commandes -->
-				<div class="rounded-xl border bg-card p-6">
-					<div class="flex items-center justify-between">
-						<p class="text-sm font-medium text-muted-foreground">Commandes</p>
-						<button
-							onclick={refreshOrders}
-							class="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
-							title="Actualiser"
-						>
-							↻
-						</button>
-					</div>
-					<p class="mt-2 text-2xl font-bold">{formattedOrders}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						{#if ordersChange >= 0}
-							<span class="text-green-600">↑ +{ordersChange}%</span>
-						{:else}
-							<span class="text-red-600">↓ {ordersChange}%</span>
-						{/if}
-						vs mois dernier
-					</p>
-				</div>
-
-				<!-- KPI 4 : Taux de Conversion -->
-				<div class="rounded-xl border bg-card p-6">
-					<div class="flex items-center justify-between">
-						<p class="text-sm font-medium text-muted-foreground">Taux de Conversion</p>
-						<button
-							onclick={refreshConversion}
-							class="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
-							title="Actualiser"
-						>
-							↻
-						</button>
-					</div>
-					<p class="mt-2 text-2xl font-bold">{formattedConversion}</p>
-					<p class="mt-1 text-xs text-muted-foreground">
-						{#if conversionChange >= 0}
-							<span class="text-green-600">↑ +{conversionChange}%</span>
-						{:else}
-							<span class="text-red-600">↓ {conversionChange}%</span>
-						{/if}
-						vs mois dernier
-					</p>
-				</div>
+				{:else}
+					<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible.</p>
+				{/each}
 			</div>
 		</div>
 	</Sidebar.Inset>
