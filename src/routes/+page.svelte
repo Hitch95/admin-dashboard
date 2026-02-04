@@ -1,16 +1,18 @@
 <script>
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import NavActions from '$lib/components/nav-actions.svelte';
-	// On importe le composant StatCard (qui est à compléter dans le TP)
 	import StatCard from '$lib/components/stat-card.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Spinner } from '$lib/components/ui/spinner/index.js';
-	// Données externes
 	import kpiCards from '$lib/data/kpi-cards.json';
 
-	// Simulation d'états de chargement pour l'exemple
+	// ============================================
+	// PARTIE 5 - SOLUTION : Props et communication parent → enfant
+	// ============================================
+
+	// États de l'application (simulation de chargement)
 	let loading = $state(false);
 	let error = $state(null);
 </script>
@@ -54,18 +56,14 @@
 				<!-- Grille des KPIs -->
 				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 					{#each kpiCards as card (card.id)}
-						<!-- TODO 6: Appeler le composant StatCard -->
-						<!-- Remplacez la div "opacity-50" ci-dessous par votre composant <StatCard /> -->
-						<!-- Vous devez lui passer les props : title, value, previousValue, icon, type -->
-
-						<div class="rounded-xl border bg-card p-6 opacity-50">
-							<div class="flex items-center justify-between">
-								<p class="text-sm font-medium text-muted-foreground">{card.title}</p>
-								<span class="text-muted-foreground/80">{card.icon}</span>
-							</div>
-							<p class="mt-2 text-2xl font-bold">{card.value}</p>
-							<p class="mt-1 text-xs text-muted-foreground">Composant non implémenté</p>
-						</div>
+						<!-- SOLUTION : Utilisation du composant StatCard -->
+						<StatCard
+							title={card.title}
+							value={card.value}
+							previousValue={card.previousValue}
+							icon={card.icon}
+							type={card.type}
+						/>
 					{:else}
 						<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>
 					{/each}
