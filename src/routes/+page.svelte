@@ -7,27 +7,27 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { RefreshCw } from 'lucide-svelte';
-
-	// ============================================
-	// PARTIE 5 - TP : Ajout d'un bouton de rafraîchissement
-	// ============================================
-
-	// Données initiales (importées depuis JSON)
 	import initialKpiCards from '$lib/data/kpi-cards.json';
 
-	// TODO 7: Transformer les données en état réactif avec $state()
-	// pour pouvoir les modifier lors du rafraîchissement
-	let kpiCards = initialKpiCards;
+	// ============================================
+	// PARTIE 5 - SOLUTION : Props et rafraîchissement
+	// ============================================
 
-	// État de chargement global
+	let kpiCards = $state(initialKpiCards);
 	let loading = $state(false);
 
-	// TODO 8: Créer une fonction refreshData() qui :
-	// 1. Passe loading à true
-	// 2. Attend 1 seconde (simuler un appel API)
-	// 3. Met à jour les valeurs avec des nombres aléatoires
-	// 4. Repasse loading à false
-	// Indice : utilisez setTimeout ou await new Promise(...)
+	const refreshData = async () => {
+		loading = true;
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+
+		kpiCards = kpiCards.map((card) => ({
+			...card,
+			previousValue: card.value,
+			value: card.value * (0.9 + Math.random() * 0.2)
+		}));
+
+		loading = false;
+	};
 </script>
 
 <Sidebar.Provider>
@@ -56,11 +56,8 @@
 					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
 				</div>
 
-				<!-- TODO 9: Connecter le bouton à refreshData() -->
-				<!-- Ajouter l'attribut disabled={loading} pour éviter les doubles clics -->
-				<!-- Ajouter une animation de rotation sur l'icône pendant le chargement -->
-				<Button variant="outline" size="sm">
-					<RefreshCw class="mr-2 size-4" />
+				<Button variant="outline" size="sm" onclick={refreshData} disabled={loading}>
+					<RefreshCw class="mr-2 size-4 {loading ? 'animate-spin' : ''}" />
 					Actualiser
 				</Button>
 			</div>
@@ -68,13 +65,13 @@
 			<!-- Grille des KPIs -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{#each kpiCards as card (card.id)}
-					<!-- TODO 10: Passer la prop loading au composant StatCard -->
 					<StatCard
 						title={card.title}
 						value={card.value}
 						previousValue={card.previousValue}
 						icon={card.icon}
 						type={card.type}
+						{loading}
 					/>
 				{:else}
 					<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>

@@ -1,22 +1,15 @@
 <script>
 	// ============================================
-	// PARTIE 5 - TP : Refactorisation du composant StatCard
+	// PARTIE 5 - SOLUTION : Composant StatCard avec Props
 	// ============================================
-	// Objectif : Utiliser les composants UI (Card, Badge, Skeleton)
-	// et ajouter un état de chargement
 
 	import { formatValue, calculateChange } from '$lib/utils.js';
+	import * as Card from '$lib/components/ui/card/index.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 
-	// TODO 1: Importer les composants UI nécessaires
-	// - Card (depuis '$lib/components/ui/card/index.js')
-	// - Badge (depuis '$lib/components/ui/badge/index.js')
-	// - Skeleton (depuis '$lib/components/ui/skeleton/index.js')
+	let { title, value, previousValue, icon, type, loading = false } = $props();
 
-	// TODO 2: Ajouter une prop "loading" avec une valeur par défaut à false
-	// Syntaxe pour une valeur par défaut : let { prop = valeurParDefaut } = $props();
-	let { title, value, previousValue, icon, type } = $props();
-
-	// Calcul de variation réactif
 	let change = $derived(calculateChange(value, previousValue));
 </script>
 
