@@ -5,16 +5,29 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import { Spinner } from '$lib/components/ui/spinner/index.js';
-	import kpiCards from '$lib/data/kpi-cards.json';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { RefreshCw } from 'lucide-svelte';
 
 	// ============================================
-	// PARTIE 5 - SOLUTION : Props et communication parent → enfant
+	// PARTIE 5 - TP : Ajout d'un bouton de rafraîchissement
 	// ============================================
 
-	// États de l'application (simulation de chargement)
+	// Données initiales (importées depuis JSON)
+	import initialKpiCards from '$lib/data/kpi-cards.json';
+
+	// TODO 7: Transformer les données en état réactif avec $state()
+	// pour pouvoir les modifier lors du rafraîchissement
+	let kpiCards = initialKpiCards;
+
+	// État de chargement global
 	let loading = $state(false);
-	let error = $state(null);
+
+	// TODO 8: Créer une fonction refreshData() qui :
+	// 1. Passe loading à true
+	// 2. Attend 1 seconde (simuler un appel API)
+	// 3. Met à jour les valeurs avec des nombres aléatoires
+	// 4. Repasse loading à false
+	// Indice : utilisez setTimeout ou await new Promise(...)
 </script>
 
 <Sidebar.Provider>
@@ -37,38 +50,36 @@
 			</div>
 		</header>
 		<div class="flex flex-1 flex-col gap-6 p-6">
-			<div>
-				<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
-				<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
+			<div class="flex items-center justify-between">
+				<div>
+					<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
+				</div>
+
+				<!-- TODO 9: Connecter le bouton à refreshData() -->
+				<!-- Ajouter l'attribut disabled={loading} pour éviter les doubles clics -->
+				<!-- Ajouter une animation de rotation sur l'icône pendant le chargement -->
+				<Button variant="outline" size="sm">
+					<RefreshCw class="mr-2 size-4" />
+					Actualiser
+				</Button>
 			</div>
 
-			{#if loading}
-				<div class="flex h-64 flex-col items-center justify-center gap-4">
-					<Spinner class="size-8" />
-					<p class="animate-pulse text-sm text-muted-foreground">Chargement des données...</p>
-				</div>
-			{:else if error}
-				<div class="rounded-xl border border-red-200 bg-red-50 p-6">
-					<h3 class="text-lg font-semibold text-red-800">Erreur</h3>
-					<p class="mt-2 text-sm text-red-600">{error}</p>
-				</div>
-			{:else}
-				<!-- Grille des KPIs -->
-				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-					{#each kpiCards as card (card.id)}
-						<!-- SOLUTION : Utilisation du composant StatCard -->
-						<StatCard
-							title={card.title}
-							value={card.value}
-							previousValue={card.previousValue}
-							icon={card.icon}
-							type={card.type}
-						/>
-					{:else}
-						<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>
-					{/each}
-				</div>
-			{/if}
+			<!-- Grille des KPIs -->
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{#each kpiCards as card (card.id)}
+					<!-- TODO 10: Passer la prop loading au composant StatCard -->
+					<StatCard
+						title={card.title}
+						value={card.value}
+						previousValue={card.previousValue}
+						icon={card.icon}
+						type={card.type}
+					/>
+				{:else}
+					<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>
+				{/each}
+			</div>
 		</div>
 	</Sidebar.Inset>
 </Sidebar.Provider>
