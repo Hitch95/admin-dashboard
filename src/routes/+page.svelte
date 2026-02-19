@@ -10,7 +10,7 @@
 	import initialKpiCards from '$lib/data/kpi-cards.json';
 
 	// ============================================
-	// PARTIE 5 - SOLUTION : Props et rafraîchissement
+	// PARTIE 6 - TP : Utilisation des Snippets côté Parent
 	// ============================================
 
 	let kpiCards = $state(initialKpiCards);
@@ -28,6 +28,12 @@
 
 		loading = false;
 	};
+
+	// TODO 4: Importer les icônes Lucide correspondant à chaque KPI
+	// import { DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
+	//
+	// TODO 5: Créer un objet de mapping entre l'id de la carte et le composant icône
+	// Exemple : const iconMap = { revenue: DollarSign, users: Users, ... };
 </script>
 
 <Sidebar.Provider>
@@ -65,6 +71,15 @@
 			<!-- Grille des KPIs -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{#each kpiCards as card (card.id)}
+					<!-- TODO 6: Passer un snippet "icon" à StatCard -->
+					<!-- Au lieu de icon={card.icon}, utilisez la syntaxe snippet : -->
+					<!-- {#snippet icon()} -->
+					<!--   <MonIcone class="size-5" /> -->
+					<!-- {/snippet} -->
+					<!--  -->
+					<!-- TODO 7: (Bonus) Passer un snippet "children" pour ajouter -->
+					<!-- du contenu personnalisé sous la carte "Revenu Total" -->
+					<!-- Exemple : un petit texte "Objectif : 50 000 €" -->
 					<StatCard
 						title={card.title}
 						value={card.value}
