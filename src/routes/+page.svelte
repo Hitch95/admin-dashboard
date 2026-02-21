@@ -7,12 +7,20 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
 	import { transactions } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 8 - SOLUTION : Store Writable
+	// PARTIE 9 - TP : Store Derived
 	// ============================================
+
+	// TODO 4: Remplacer l'import ci-dessous :
+	//   - Importer kpisWithChange (au lieu de kpis) et kpiSummary depuis kpi-store.js
+	//   - Dans le template :
+	//     → {#each $kpisWithChange ...} au lieu de {#each $kpis ...}
+	//     → Passer change={card.change} au lieu de previousValue={card.previousValue}
+	//     → Afficher $kpiSummary.trend dans le sous-titre
 	import { kpis, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 
 	const iconMap = {
@@ -50,7 +58,11 @@
 			<div class="flex items-center justify-between">
 				<div>
 					<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
-					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
+					<p class="text-sm text-muted-foreground">
+						Vue d'ensemble de vos indicateurs clés
+						<!-- TODO 4 (suite): Afficher un indicateur de tendance ici -->
+						<!-- Exemple : si $kpiSummary.trend === 'up' → Badge "📈 X en hausse" -->
+					</p>
 				</div>
 
 				<Button variant="outline" size="sm" onclick={refreshKpis} disabled={$kpiLoading}>
