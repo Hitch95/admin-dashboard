@@ -1,6 +1,6 @@
 <script>
 	// ============================================
-	// PARTIE 9 - TP : Store Derived
+	// PARTIE 9 - SOLUTION : Store Derived
 	// ============================================
 
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -8,12 +8,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 	import { formatValue } from '$lib/utils.js';
 
-	// TODO 3: Remplacer "previousValue" par "change" dans les props
-	// Le calcul est maintenant fait dans le store derived (kpisWithChange)
-	// Supprimer aussi le $derived et l'import de calculateChange
-	let { title, value, previousValue, icon, children, type, loading = false } = $props();
-
-	let change = $derived(calculateChange(value, previousValue));
+	let { title, value, change, icon, children, type, loading = false } = $props();
 </script>
 
 <Card.Root>

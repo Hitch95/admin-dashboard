@@ -1,12 +1,6 @@
 // ============================================
-// PARTIE 9 - TP : Store Derived
+// PARTIE 9 - SOLUTION : Store Derived
 // ============================================
-// derived(store, fn) recalcule automatiquement
-// sa valeur chaque fois que le store source change.
-//
-// Syntaxe :
-//   const result = derived(source, ($source) => { ... })
-//   const result = derived([s1, s2], ([$s1, $s2]) => { ... })
 
 import { writable, derived } from 'svelte/store';
 import { calculateChange } from '$lib/utils.js';
@@ -15,19 +9,22 @@ import initialKpiCards from '$lib/data/kpi-cards.json';
 export const kpis = writable(initialKpiCards);
 export const kpiLoading = writable(false);
 
-// TODO 1: Créer un store derived "kpisWithChange" à partir de "kpis"
-// Pour chaque card, ajouter une propriété "change"
-// calculée avec calculateChange(card.value, card.previousValue)
-//
-// export const kpisWithChange = derived(kpis, ($kpis) => ...)
+export const kpisWithChange = derived(kpis, ($kpis) =>
+    $kpis.map((card) => ({
+        ...card,
+        change: calculateChange(card.value, card.previousValue)
+    }))
+);
 
-// TODO 2: Créer un store derived "kpiSummary" à partir de "kpisWithChange"
-// Retourner un objet { positive, negative, trend } où :
-//   - positive = nombre de cards dont change >= 0
-//   - negative = nombre de cards dont change < 0
-//   - trend = 'up' si positive > negative, 'down' sinon
-//
-// export const kpiSummary = derived(kpisWithChange, ($cards) => ...)
+export const kpiSummary = derived(kpisWithChange, ($cards) => {
+    const positive = $cards.filter((c) => c.change >= 0).length;
+    const negative = $cards.filter((c) => c.change < 0).length;
+    return {
+        positive,
+        negative,
+        trend: positive > negative ? 'up' : 'down'
+    };
+});
 
 export async function refreshKpis() {
     kpiLoading.set(true);

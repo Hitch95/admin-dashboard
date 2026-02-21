@@ -12,16 +12,9 @@
 	import { transactions } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 9 - TP : Store Derived
+	// PARTIE 9 - SOLUTION : Store Derived
 	// ============================================
-
-	// TODO 4: Remplacer l'import ci-dessous :
-	//   - Importer kpisWithChange (au lieu de kpis) et kpiSummary depuis kpi-store.js
-	//   - Dans le template :
-	//     → {#each $kpisWithChange ...} au lieu de {#each $kpis ...}
-	//     → Passer change={card.change} au lieu de previousValue={card.previousValue}
-	//     → Afficher $kpiSummary.trend dans le sous-titre
-	import { kpis, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
+	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 
 	const iconMap = {
 		revenue: DollarSign,
@@ -60,8 +53,15 @@
 					<h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
 					<p class="text-sm text-muted-foreground">
 						Vue d'ensemble de vos indicateurs clés
-						<!-- TODO 4 (suite): Afficher un indicateur de tendance ici -->
-						<!-- Exemple : si $kpiSummary.trend === 'up' → Badge "📈 X en hausse" -->
+						{#if $kpiSummary.trend === 'up'}
+							<Badge variant="secondary" class="ml-2 bg-green-100 text-green-800">
+								📈 {$kpiSummary.positive} en hausse
+							</Badge>
+						{:else}
+							<Badge variant="destructive" class="ml-2">
+								📉 {$kpiSummary.negative} en baisse
+							</Badge>
+						{/if}
 					</p>
 				</div>
 
@@ -72,12 +72,12 @@
 			</div>
 
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-				{#each $kpis as card (card.id)}
+				{#each $kpisWithChange as card (card.id)}
 					{@const Icon = iconMap[card.id]}
 					<StatCard
 						title={card.title}
 						value={card.value}
-						previousValue={card.previousValue}
+						change={card.change}
 						type={card.type}
 						loading={$kpiLoading}
 					>
