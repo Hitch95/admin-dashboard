@@ -2,15 +2,17 @@
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import NavActions from '$lib/components/nav-actions.svelte';
 	import StatCard from '$lib/components/stat-card.svelte';
+	import TransactionsTable from '$lib/components/transactions-table.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
 	import initialKpiCards from '$lib/data/kpi-cards.json';
+	import { transactions } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 6 - SOLUTION : Utilisation des Snippets côté Parent
+	// PARTIE 7 - TP : Table Actions
 	// ============================================
 
 	let kpiCards = $state(initialKpiCards);
@@ -35,6 +37,12 @@
 		orders: ShoppingCart,
 		conversion: TrendingUp
 	};
+
+	// Callbacks pour les actions sur les transactions
+	// (simples alertes pour l'instant, seront remplacées par des stores plus tard)
+	const handleView = (id) => alert(`Voir la transaction #${id}`);
+	const handleEdit = (id) => alert(`Modifier la transaction #${id}`);
+	const handleDelete = (id) => alert(`Supprimer la transaction #${id}`);
 </script>
 
 <Sidebar.Provider>
@@ -83,17 +91,25 @@
 						{#snippet icon()}
 							<Icon class="size-5 text-muted-foreground/80" />
 						{/snippet}
-
-						{#if card.id === 'revenue'}
-							{#snippet children()}
-								<p class="mt-2 text-xs text-muted-foreground">Objectif : 50 000 €</p>
-							{/snippet}
-						{/if}
 					</StatCard>
 				{:else}
 					<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>
 				{/each}
 			</div>
+
+			<!-- Section Transactions -->
+			<div>
+				<h2 class="text-lg font-semibold tracking-tight">Transactions récentes</h2>
+				<p class="text-sm text-muted-foreground">Les 5 dernières transactions de votre boutique</p>
+			</div>
+
+			<TransactionsTable
+				{transactions}
+				{loading}
+				onView={handleView}
+				onEdit={handleEdit}
+				onDelete={handleDelete}
+			/>
 		</div>
 	</Sidebar.Inset>
 </Sidebar.Provider>
