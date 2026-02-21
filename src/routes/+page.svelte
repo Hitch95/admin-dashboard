@@ -6,11 +6,11 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { RefreshCw } from 'lucide-svelte';
+	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
 	import initialKpiCards from '$lib/data/kpi-cards.json';
 
 	// ============================================
-	// PARTIE 6 - TP : Utilisation des Snippets côté Parent
+	// PARTIE 6 - SOLUTION : Utilisation des Snippets côté Parent
 	// ============================================
 
 	let kpiCards = $state(initialKpiCards);
@@ -29,11 +29,12 @@
 		loading = false;
 	};
 
-	// TODO 4: Importer les icônes Lucide correspondant à chaque KPI
-	// import { DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
-	//
-	// TODO 5: Créer un objet de mapping entre l'id de la carte et le composant icône
-	// Exemple : const iconMap = { revenue: DollarSign, users: Users, ... };
+	const iconMap = {
+		revenue: DollarSign,
+		users: Users,
+		orders: ShoppingCart,
+		conversion: TrendingUp
+	};
 </script>
 
 <Sidebar.Provider>
@@ -71,23 +72,24 @@
 			<!-- Grille des KPIs -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{#each kpiCards as card (card.id)}
-					<!-- TODO 6: Passer un snippet "icon" à StatCard -->
-					<!-- Au lieu de icon={card.icon}, utilisez la syntaxe snippet : -->
-					<!-- {#snippet icon()} -->
-					<!--   <MonIcone class="size-5" /> -->
-					<!-- {/snippet} -->
-					<!--  -->
-					<!-- TODO 7: (Bonus) Passer un snippet "children" pour ajouter -->
-					<!-- du contenu personnalisé sous la carte "Revenu Total" -->
-					<!-- Exemple : un petit texte "Objectif : 50 000 €" -->
+					{@const Icon = iconMap[card.id]}
 					<StatCard
 						title={card.title}
 						value={card.value}
 						previousValue={card.previousValue}
-						icon={card.icon}
 						type={card.type}
 						{loading}
-					/>
+					>
+						{#snippet icon()}
+							<Icon class="size-5 text-muted-foreground/80" />
+						{/snippet}
+
+						{#if card.id === 'revenue'}
+							{#snippet children()}
+								<p class="mt-2 text-xs text-muted-foreground">Objectif : 50 000 €</p>
+							{/snippet}
+						{/if}
+					</StatCard>
 				{:else}
 					<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>
 				{/each}
