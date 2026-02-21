@@ -8,26 +8,27 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
-	import initialKpiCards from '$lib/data/kpi-cards.json';
 	import { transactions } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 7 - SOLUTION : Table Actions
+	// PARTIE 8 - TP : Store Writable
 	// ============================================
 
+	// TODO 3: Importer { kpis, kpiLoading, refreshKpis } depuis '$lib/stores/kpi-store.js'
+
+	// TODO 4: Supprimer les variables locales ci-dessous (kpiCards, loading, refreshData)
+	// Elles seront remplacées par les stores importés.
+	import initialKpiCards from '$lib/data/kpi-cards.json';
 	let kpiCards = $state(initialKpiCards);
 	let loading = $state(false);
-
 	const refreshData = async () => {
 		loading = true;
 		await new Promise((resolve) => setTimeout(resolve, 1000));
-
 		kpiCards = kpiCards.map((card) => ({
 			...card,
 			previousValue: card.value,
 			value: card.value * (0.9 + Math.random() * 0.2)
 		}));
-
 		loading = false;
 	};
 
@@ -38,8 +39,6 @@
 		conversion: TrendingUp
 	};
 
-	// Callbacks pour les actions sur les transactions
-	// (simples alertes pour l'instant, seront remplacées par des stores plus tard)
 	const handleView = (id) => alert(`Voir la transaction #${id}`);
 	const handleEdit = (id) => alert(`Modifier la transaction #${id}`);
 	const handleDelete = (id) => alert(`Supprimer la transaction #${id}`);
@@ -71,13 +70,14 @@
 					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
 				</div>
 
+				<!-- TODO 5: Remplacer refreshData → refreshKpis et loading → $kpiLoading -->
 				<Button variant="outline" size="sm" onclick={refreshData} disabled={loading}>
 					<RefreshCw class="mr-2 size-4 {loading ? 'animate-spin' : ''}" />
 					Actualiser
 				</Button>
 			</div>
 
-			<!-- Grille des KPIs -->
+			<!-- TODO 5 (suite): Remplacer kpiCards → $kpis et loading → $kpiLoading -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{#each kpiCards as card (card.id)}
 					{@const Icon = iconMap[card.id]}
@@ -97,7 +97,6 @@
 				{/each}
 			</div>
 
-			<!-- Section Transactions -->
 			<div>
 				<h2 class="text-lg font-semibold tracking-tight">Transactions récentes</h2>
 				<p class="text-sm text-muted-foreground">Les 5 dernières transactions de votre boutique</p>
