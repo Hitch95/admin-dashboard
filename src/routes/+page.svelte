@@ -11,26 +11,9 @@
 	import { transactions } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 8 - TP : Store Writable
+	// PARTIE 8 - SOLUTION : Store Writable
 	// ============================================
-
-	// TODO 3: Importer { kpis, kpiLoading, refreshKpis } depuis '$lib/stores/kpi-store.js'
-
-	// TODO 4: Supprimer les variables locales ci-dessous (kpiCards, loading, refreshData)
-	// Elles seront remplacées par les stores importés.
-	import initialKpiCards from '$lib/data/kpi-cards.json';
-	let kpiCards = $state(initialKpiCards);
-	let loading = $state(false);
-	const refreshData = async () => {
-		loading = true;
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-		kpiCards = kpiCards.map((card) => ({
-			...card,
-			previousValue: card.value,
-			value: card.value * (0.9 + Math.random() * 0.2)
-		}));
-		loading = false;
-	};
+	import { kpis, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 
 	const iconMap = {
 		revenue: DollarSign,
@@ -70,23 +53,21 @@
 					<p class="text-sm text-muted-foreground">Vue d'ensemble de vos indicateurs clés</p>
 				</div>
 
-				<!-- TODO 5: Remplacer refreshData → refreshKpis et loading → $kpiLoading -->
-				<Button variant="outline" size="sm" onclick={refreshData} disabled={loading}>
-					<RefreshCw class="mr-2 size-4 {loading ? 'animate-spin' : ''}" />
-					Actualiser
+				<Button variant="outline" size="sm" onclick={refreshKpis} disabled={$kpiLoading}>
+					<RefreshCw class="mr-2 size-4 {$kpiLoading ? 'animate-spin' : ''}" />
+					{$kpiLoading ? 'Actualisation...' : 'Actualiser'}
 				</Button>
 			</div>
 
-			<!-- TODO 5 (suite): Remplacer kpiCards → $kpis et loading → $kpiLoading -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-				{#each kpiCards as card (card.id)}
+				{#each $kpis as card (card.id)}
 					{@const Icon = iconMap[card.id]}
 					<StatCard
 						title={card.title}
 						value={card.value}
 						previousValue={card.previousValue}
 						type={card.type}
-						{loading}
+						loading={$kpiLoading}
 					>
 						{#snippet icon()}
 							<Icon class="size-5 text-muted-foreground/80" />
@@ -104,7 +85,7 @@
 
 			<TransactionsTable
 				{transactions}
-				{loading}
+				loading={$kpiLoading}
 				onView={handleView}
 				onEdit={handleEdit}
 				onDelete={handleDelete}
