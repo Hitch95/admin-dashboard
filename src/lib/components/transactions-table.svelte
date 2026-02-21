@@ -1,14 +1,13 @@
 <script>
 	// ============================================
-	// PARTIE 7 - TP : Table des transactions
+	// PARTIE 7 - SOLUTION : Table des transactions
 	// ============================================
 
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 	import TransactionRow from './transaction-row.svelte';
 
-	// TODO 1: Définir les props avec $props()
-	// transactions, loading = false, onView, onEdit, onDelete
+	let { transactions, loading = false, onView, onEdit, onDelete } = $props();
 </script>
 
 <div class="rounded-md border">
@@ -23,11 +22,27 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			<!-- TODO 2: Si loading, afficher 5 <Table.Row> avec des <Skeleton> dans les cellules -->
-
-			<!-- TODO 3: Sinon, {#each transactions as transaction} afficher <TransactionRow> -->
-
-			<!-- TODO 4: Gérer {:else} (tableau vide) avec une cellule "Aucune transaction" -->
+			{#if loading}
+				{#each Array(5) as _}
+					<Table.Row>
+						<Table.Cell><Skeleton class="h-4 w-32" /></Table.Cell>
+						<Table.Cell class="text-right"><Skeleton class="ml-auto h-4 w-20" /></Table.Cell>
+						<Table.Cell class="text-center"><Skeleton class="mx-auto h-5 w-20" /></Table.Cell>
+						<Table.Cell><Skeleton class="h-4 w-24" /></Table.Cell>
+						<Table.Cell><Skeleton class="ml-auto h-8 w-8 rounded" /></Table.Cell>
+					</Table.Row>
+				{/each}
+			{:else}
+				{#each transactions as transaction (transaction.id)}
+					<TransactionRow {transaction} {onView} {onEdit} {onDelete} />
+				{:else}
+					<Table.Row>
+						<Table.Cell colspan={5} class="h-24 text-center text-muted-foreground">
+							Aucune transaction
+						</Table.Cell>
+					</Table.Row>
+				{/each}
+			{/if}
 		</Table.Body>
 	</Table.Root>
 </div>

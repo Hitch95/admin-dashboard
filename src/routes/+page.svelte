@@ -12,7 +12,7 @@
 	import { transactions } from '$lib/data/mock.js';
 
 	// ============================================
-	// PARTIE 7 - TP : Table Actions
+	// PARTIE 7 - SOLUTION : Table Actions
 	// ============================================
 
 	let kpiCards = $state(initialKpiCards);
