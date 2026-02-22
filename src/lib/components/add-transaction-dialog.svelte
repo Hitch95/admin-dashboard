@@ -1,19 +1,46 @@
 <script>
 	// ============================================
-	// PARTIE 15 - SOLUTION : Async (Suite) / POST Form
+	// PARTIE 16 - TP : Forms Dialog (Suite)
 	// ============================================
 
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import { Plus, Loader2 } from 'lucide-svelte';
+	import { Plus, Loader2, Pencil } from 'lucide-svelte';
 	import { transactions } from '$lib/stores/transactions-store.js';
+
+	// TODO 2 : Accepter deux props optionnelles :
+	//   let { transaction = null, onclose = () => {} } = $props();
+	//   - transaction : si fourni → mode édition, sinon → mode création
+	//   - onclose : callback pour notifier le parent quand le dialog se ferme
+	//
+	//   Créer un $derived pour déterminer le mode :
+	//   let isEditing = $derived(transaction !== null);
+	//
+	//   Ajouter un $effect qui, quand transaction change et n'est pas null,
+	//   pré-remplit formData et ouvre le dialog :
+	//   $effect(() => {
+	//       if (transaction) {
+	//           formData = { ...transaction, amount: String(transaction.amount) };
+	//           open = true;
+	//       }
+	//   });
 
 	let open = $state(false);
 
 	let submitting = $state(false);
 	let errorMsg = $state(null);
+
+	// TODO 3 : Ajouter un $state() errors = {} pour la validation par champ
+	//   et créer une fonction validate() qui retourne true si le formulaire est valide :
+	//   const validate = () => {
+	//       errors = {};
+	//       if (!formData.customer.trim()) errors.customer = 'Le nom est requis';
+	//       if (!formData.email.includes('@')) errors.email = 'Email invalide';
+	//       if (!formData.amount || parseFloat(formData.amount) <= 0) errors.amount = 'Montant invalide';
+	//       return Object.keys(errors).length === 0;
+	//   }
 
 	let formData = $state({
 		customer: '',
@@ -21,6 +48,12 @@
 		amount: '',
 		status: 'pending'
 	});
+
+	// TODO 4 : Modifier handleSubmit() pour :
+	//   - Appeler validate() en premier, ne pas soumettre si invalide
+	//   - Si isEditing → appeler transactions.update(transaction.id, parsedData) + fermer
+	//   - Si création → garder le fetch POST existant
+	//   Penser à appeler onclose() quand le dialog se ferme en mode édition
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -61,6 +94,8 @@
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-md">
 		<Dialog.Header>
+			<!-- TODO 5 : Adapter le titre et la description selon le mode -->
+			<!--   isEditing ? 'Modifier la transaction' : 'Nouvelle transaction' -->
 			<Dialog.Title>Nouvelle transaction</Dialog.Title>
 			<Dialog.Description>Remplissez les informations de la transaction.</Dialog.Description>
 		</Dialog.Header>
@@ -68,6 +103,8 @@
 			<div class="space-y-2">
 				<Label for="customer">Client</Label>
 				<Input id="customer" bind:value={formData.customer} placeholder="Jean Dupont" required />
+				<!-- TODO 5 : Afficher errors.customer sous le champ si présent -->
+				<!-- {#if errors.customer}<p class="text-xs text-destructive">{errors.customer}</p>{/if} -->
 			</div>
 			<div class="space-y-2">
 				<Label for="email">Email</Label>
@@ -78,6 +115,8 @@
 					placeholder="jean@email.com"
 					required
 				/>
+				<!-- TODO 5 : Afficher errors.email sous le champ si présent -->
+				<!-- {#if errors.email}<p class="text-xs text-destructive">{errors.email}</p>{/if} -->
 			</div>
 			<div class="space-y-2">
 				<Label for="amount">Montant (€)</Label>
@@ -89,6 +128,8 @@
 					placeholder="0.00"
 					required
 				/>
+				<!-- TODO 5 : Afficher errors.amount sous le champ si présent -->
+				<!-- {#if errors.amount}<p class="text-xs text-destructive">{errors.amount}</p>{/if} -->
 			</div>
 			<div class="space-y-2">
 				<Label for="status">Statut</Label>
@@ -115,6 +156,8 @@
 						<Loader2 class="mr-2 size-4 animate-spin" />
 						Envoi...
 					{:else}
+						<!-- TODO 5 : Adapter le label selon le mode -->
+						<!-- isEditing ? 'Modifier' : 'Créer' -->
 						Créer
 					{/if}
 				</Button>

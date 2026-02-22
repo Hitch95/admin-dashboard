@@ -25,7 +25,7 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 15 - TP : Async (Suite)
+	// PARTIE 16 - TP : Forms Dialog (Suite)
 	// ============================================
 
 	let { data } = $props();
@@ -42,6 +42,21 @@
 		orders: ShoppingCart,
 		conversion: TrendingUp
 	};
+
+	// TODO 6 : Remplacer handleEdit par une logique d'ouverture du dialog en mode édition :
+	//   Déclarer un $state() editingTransaction = null;
+	//
+	//   Modifier handleEdit pour trouver la transaction et la passer au dialog :
+	//   const handleEdit = (id) => {
+	//       const tx = $filteredTransactions.find((t) => t.id === id)
+	//                  || get(transactions).find((t) => t.id === id);
+	//       if (tx) editingTransaction = tx;
+	//   };
+	//
+	//   Puis modifier <AddTransactionDialog /> dans le template :
+	//   <AddTransactionDialog transaction={editingTransaction} onclose={() => editingTransaction = null} />
+	//
+	//   Penser à importer get depuis 'svelte/store' si besoin
 
 	const handleView = (id) => alert(`Voir la transaction #${id}`);
 	const handleEdit = (id) => alert(`Modifier la transaction #${id}`);

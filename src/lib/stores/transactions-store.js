@@ -1,11 +1,11 @@
 // ============================================
-// PARTIE 13 - SOLUTION : Async / Custom Store
+// PARTIE 16 - TP : Forms Dialog (Suite)
 // ============================================
 
 import { writable, derived } from 'svelte/store';
 import { transactions as initialTransactions } from '$lib/data/mock.js';
 
-function createTransactionsStore() {
+const createTransactionsStore = () => {
 	const { subscribe, set, update } = writable([...initialTransactions]);
 
 	return {
@@ -27,6 +27,12 @@ function createTransactionsStore() {
 		remove(id) {
 			update((list) => list.filter((t) => t.id !== id));
 		},
+
+		// TODO 1 : Ajouter une méthode update(id, payload) qui remplace
+		//   la transaction ciblée par les nouvelles données :
+		//   update(id, payload) {
+		//       update((list) => list.map((t) => (t.id === id ? { ...t, ...payload } : t)));
+		//   },
 
 		reset() {
 			set([...initialTransactions]);
