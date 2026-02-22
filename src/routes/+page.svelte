@@ -14,6 +14,8 @@
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp, Search, X } from 'lucide-svelte';
 	import RefreshTimer from '$lib/components/refresh-timer.svelte';
 	import AddTransactionDialog from '$lib/components/add-transaction-dialog.svelte';
+	import ProgressCard from '$lib/components/progress-card.svelte';
+	import goals from '$lib/data/goals.json';
 
 	// Stores
 	import { get } from 'svelte/store';
@@ -26,7 +28,7 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 17 - TP : Exercice ProgressCard
+	// PARTIE 17 - SOLUTION : Exercice ProgressCard
 	// ============================================
 
 	let { data } = $props();
@@ -123,11 +125,6 @@
 				{/each}
 			</div>
 
-			<!-- TODO 6 : Intégrer une grille de <ProgressCard> sous les StatCards -->
-			<!--   Importer ProgressCard et goals.json -->
-			<!--   import ProgressCard from '$lib/components/progress-card.svelte'; -->
-			<!--   import goals from '$lib/data/goals.json'; -->
-			<!--
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{#each goals as goal (goal.id)}
 					<ProgressCard
@@ -138,7 +135,6 @@
 					/>
 				{/each}
 			</div>
-			-->
 
 			<div class="flex items-center justify-between">
 				<div>
