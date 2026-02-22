@@ -103,8 +103,8 @@ git checkout part-03-conditional-solution
 | 12     | Lifecycle            | `part-12-lifecycle-tp`             | `part-12-lifecycle-solution`             |
 | 13     | Async                | `part-13-async-tp`                 | `part-13-async-solution`                 |
 | 14     | Forms Dialog         | `part-14-forms-dialog-tp`          | `part-14-forms-dialog-solution`          |
-| 15     | Async (Suite)        | `part-15-async-tp`                 | `part-15-async-solution`                 |
-| 16     | Forms Dialog (Suite) | `part-16-forms-dialog-tp`          | `part-16-forms-dialog-solution`          |
+| 15     | Async (Suite)        | `part-15-async-two-tp`             | `part-15-async-two-solution`             |
+| 16     | Forms Dialog (Suite) | `part-16-forms-dialog-two-tp`      | `part-16-forms-dialog-two-solution`      |
 | 17     | Progress Card        | `part-17-exercise-progresscard-tp` | `part-17-exercise-progresscard-solution` |
 | 18     | Theme                | `part-18-exercise-theme-tp`        | `part-18-exercise-theme-solution`        |
 

@@ -1,18 +1,21 @@
 <script>
+	import { onMount, setContext } from 'svelte';
+
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import NavActions from '$lib/components/nav-actions.svelte';
 	import StatCard from '$lib/components/stat-card.svelte';
 	import TransactionsTable from '$lib/components/transactions-table.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp, Search, X } from 'lucide-svelte';
-	import { setContext } from 'svelte';
 	import RefreshTimer from '$lib/components/refresh-timer.svelte';
+	import AddTransactionDialog from '$lib/components/add-transaction-dialog.svelte';
 
+	// Stores
 	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 	import {
 		transactions,
@@ -22,14 +25,11 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 14 - SOLUTION : Forms Dialog
+	// PARTIE 15 - TP : Async (Suite)
 	// ============================================
-
-	import AddTransactionDialog from '$lib/components/add-transaction-dialog.svelte';
 
 	let { data } = $props();
 
-	import { onMount } from 'svelte';
 	onMount(() => {
 		if (data.transactions) {
 			transactions.init(data.transactions);
