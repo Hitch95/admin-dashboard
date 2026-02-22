@@ -22,8 +22,21 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 12 - SOLUTION : Lifecycle
+	// PARTIE 13 - TP : Async
 	// ============================================
+
+	// TODO 4 : Récupérer les données du load() via $props()
+	//   let { data } = $props();
+
+	// TODO 5 : Initialiser le store transactions avec les données du load()
+	//   Utiliser onMount pour appeler transactions.init(data.transactions)
+	//   quand la page se charge, au lieu d'utiliser les données statiques
+	//   import { onMount } from 'svelte';
+	//   onMount(() => {
+	//       if (data.transactions) {
+	//           transactions.init(data.transactions);
+	//       }
+	//   });
 
 	const iconMap = {
 		revenue: DollarSign,

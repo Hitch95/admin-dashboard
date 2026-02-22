@@ -1,5 +1,5 @@
 // ============================================
-// PARTIE 10 - SOLUTION : Custom Store
+// PARTIE 13 - TP : Async / Custom Store
 // ============================================
 
 import { writable, derived } from 'svelte/store';
@@ -10,6 +10,12 @@ function createTransactionsStore() {
 
 	return {
 		subscribe,
+
+		// TODO 3 : Ajouter une méthode init(data) qui remplace les données
+		//   du store par celles chargées depuis l'API :
+		//   init(data) {
+		//       set([...data]);
+		//   },
 
 		add(payload) {
 			const newTx = {
