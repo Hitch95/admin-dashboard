@@ -22,12 +22,10 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 14 - TP : Forms Dialog
+	// PARTIE 14 - SOLUTION : Forms Dialog
 	// ============================================
 
-	// TODO 5 : Importer AddTransactionDialog depuis '$lib/components/add-transaction-dialog.svelte'
-	//          et l'ajouter dans la section "Transactions récentes",
-	//          à côté du champ de recherche existant
+	import AddTransactionDialog from '$lib/components/add-transaction-dialog.svelte';
 
 	let { data } = $props();
 
@@ -155,6 +153,7 @@
 						<option value="pending">En attente</option>
 						<option value="failed">Échouées</option>
 					</select>
+					<AddTransactionDialog />
 				</div>
 			</div>
 
