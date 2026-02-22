@@ -8,13 +8,19 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-svelte';
-	import { transactions } from '$lib/data/mock.js';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp, Search, X } from 'lucide-svelte';
+
+	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 
 	// ============================================
-	// PARTIE 9 - SOLUTION : Store Derived
+	// PARTIE 10 - TP : Custom Store
 	// ============================================
-	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
+
+	// TODO 4 : Importer depuis '$lib/stores/transactions-store.js' :
+	//   - transactions, filteredTransactions, searchQuery, statusFilter
+	// Et SUPPRIMER l'import ci-dessous :
+	import { transactions } from '$lib/data/mock.js';
 
 	const iconMap = {
 		revenue: DollarSign,
@@ -25,6 +31,8 @@
 
 	const handleView = (id) => alert(`Voir la transaction #${id}`);
 	const handleEdit = (id) => alert(`Modifier la transaction #${id}`);
+
+	// TODO 5 : Remplacer l'alert par transactions.remove(id)
 	const handleDelete = (id) => alert(`Supprimer la transaction #${id}`);
 </script>
 
@@ -90,11 +98,41 @@
 				{/each}
 			</div>
 
-			<div>
-				<h2 class="text-lg font-semibold tracking-tight">Transactions récentes</h2>
-				<p class="text-sm text-muted-foreground">Les 5 dernières transactions de votre boutique</p>
+			<div class="flex items-center justify-between">
+				<div>
+					<h2 class="text-lg font-semibold tracking-tight">Transactions récentes</h2>
+					<p class="text-sm text-muted-foreground">Les dernières transactions de votre boutique</p>
+				</div>
+
+				<!-- TODO 6 : Câbler la barre de recherche et le filtre statut :
+				     - bind:value={$searchQuery} sur l'Input
+				     - bind:value sur le <select> avec $statusFilter
+				     Décommenter le bloc ci-dessous :
+				-->
+				<!--
+				<div class="flex items-center gap-3">
+					<div class="relative">
+						<Search class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+						<Input
+							placeholder="Rechercher un client..."
+							bind:value={$searchQuery}
+							class="w-64 pl-10"
+						/>
+					</div>
+					<select
+						bind:value={$statusFilter}
+						class="h-9 rounded-md border bg-background px-3 text-sm"
+					>
+						<option value="all">Tous</option>
+						<option value="completed">Complétées</option>
+						<option value="pending">En attente</option>
+						<option value="failed">Échouées</option>
+					</select>
+				</div>
+				-->
 			</div>
 
+			<!-- TODO 6 (suite) : Remplacer {transactions} par transactions={$filteredTransactions} -->
 			<TransactionsTable
 				{transactions}
 				loading={$kpiLoading}
