@@ -22,8 +22,12 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 13 - SOLUTION : Async
+	// PARTIE 14 - TP : Forms Dialog
 	// ============================================
+
+	// TODO 5 : Importer AddTransactionDialog depuis '$lib/components/add-transaction-dialog.svelte'
+	//          et l'ajouter dans la section "Transactions récentes",
+	//          à côté du champ de recherche existant
 
 	let { data } = $props();
 
