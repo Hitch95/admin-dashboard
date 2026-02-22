@@ -1,0 +1,30 @@
+[
+	{
+		"id": "revenue",
+		"label": "Objectif CA",
+		"current": 45231.89,
+		"target": 50000,
+		"unit": "€"
+	},
+	{
+		"id": "users",
+		"label": "Objectif Utilisateurs",
+		"current": 2350,
+		"target": 3000,
+		"unit": ""
+	},
+	{
+		"id": "orders",
+		"label": "Objectif Commandes",
+		"current": 1205,
+		"target": 1500,
+		"unit": ""
+	},
+	{
+		"id": "conversion",
+		"label": "Objectif Conversion",
+		"current": 3.2,
+		"target": 5.0,
+		"unit": "%"
+	}
+]

@@ -26,7 +26,7 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 16 - SOLUTION : Forms Dialog (Suite)
+	// PARTIE 17 - TP : Exercice ProgressCard
 	// ============================================
 
 	let { data } = $props();
@@ -122,6 +122,23 @@
 					<p class="col-span-full text-center text-muted-foreground">Aucune donnée disponible</p>
 				{/each}
 			</div>
+
+			<!-- TODO 6 : Intégrer une grille de <ProgressCard> sous les StatCards -->
+			<!--   Importer ProgressCard et goals.json -->
+			<!--   import ProgressCard from '$lib/components/progress-card.svelte'; -->
+			<!--   import goals from '$lib/data/goals.json'; -->
+			<!--
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{#each goals as goal (goal.id)}
+					<ProgressCard
+						label={goal.label}
+						current={goal.current}
+						target={goal.target}
+						unit={goal.unit}
+					/>
+				{/each}
+			</div>
+			-->
 
 			<div class="flex items-center justify-between">
 				<div>
