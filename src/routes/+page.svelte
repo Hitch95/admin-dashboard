@@ -16,6 +16,7 @@
 	import AddTransactionDialog from '$lib/components/add-transaction-dialog.svelte';
 
 	// Stores
+	import { get } from 'svelte/store';
 	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 	import {
 		transactions,
@@ -25,7 +26,7 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 16 - TP : Forms Dialog (Suite)
+	// PARTIE 16 - SOLUTION : Forms Dialog (Suite)
 	// ============================================
 
 	let { data } = $props();
@@ -43,23 +44,15 @@
 		conversion: TrendingUp
 	};
 
-	// TODO 6 : Remplacer handleEdit par une logique d'ouverture du dialog en mode édition :
-	//   Déclarer un $state() editingTransaction = null;
-	//
-	//   Modifier handleEdit pour trouver la transaction et la passer au dialog :
-	//   const handleEdit = (id) => {
-	//       const tx = $filteredTransactions.find((t) => t.id === id)
-	//                  || get(transactions).find((t) => t.id === id);
-	//       if (tx) editingTransaction = tx;
-	//   };
-	//
-	//   Puis modifier <AddTransactionDialog /> dans le template :
-	//   <AddTransactionDialog transaction={editingTransaction} onclose={() => editingTransaction = null} />
-	//
-	//   Penser à importer get depuis 'svelte/store' si besoin
+	let editingTransaction = $state(null);
 
 	const handleView = (id) => alert(`Voir la transaction #${id}`);
-	const handleEdit = (id) => alert(`Modifier la transaction #${id}`);
+	const handleEdit = (id) => {
+		const tx =
+			$filteredTransactions.find((transaction) => transaction.id === id) ||
+			get(transactions).find((transaction) => transaction.id === id);
+		if (tx) editingTransaction = tx;
+	};
 	const handleDelete = (id) => transactions.remove(id);
 
 	setContext('transactionActions', { handleView, handleEdit, handleDelete });
@@ -168,7 +161,10 @@
 						<option value="pending">En attente</option>
 						<option value="failed">Échouées</option>
 					</select>
-					<AddTransactionDialog />
+					<AddTransactionDialog
+						transaction={editingTransaction}
+						onclose={() => (editingTransaction = null)}
+					/>
 				</div>
 			</div>
 

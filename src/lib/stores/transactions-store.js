@@ -1,5 +1,5 @@
 // ============================================
-// PARTIE 16 - TP : Forms Dialog (Suite)
+// PARTIE 16 - SOLUTION : Forms Dialog (Suite)
 // ============================================
 
 import { writable, derived } from 'svelte/store';
@@ -28,11 +28,9 @@ const createTransactionsStore = () => {
 			update((list) => list.filter((t) => t.id !== id));
 		},
 
-		// TODO 1 : Ajouter une méthode update(id, payload) qui remplace
-		//   la transaction ciblée par les nouvelles données :
-		//   update(id, payload) {
-		//       update((list) => list.map((t) => (t.id === id ? { ...t, ...payload } : t)));
-		//   },
+		updateTx(id, payload) {
+			update((list) => list.map((t) => (t.id === id ? { ...t, ...payload } : t)));
+		},
 
 		reset() {
 			set([...initialTransactions]);
