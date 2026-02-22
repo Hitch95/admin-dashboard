@@ -11,6 +11,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp, Search, X } from 'lucide-svelte';
 	import { setContext } from 'svelte';
+	import RefreshTimer from '$lib/components/refresh-timer.svelte';
 
 	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 	import {
@@ -21,10 +22,8 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 12 - TP : Lifecycle
+	// PARTIE 12 - SOLUTION : Lifecycle
 	// ============================================
-	// TODO 5 : Importer RefreshTimer depuis '$lib/components/refresh-timer.svelte'
-	//          et l'ajouter dans le header, à côté du bouton "Actualiser"
 
 	const iconMap = {
 		revenue: DollarSign,
@@ -77,10 +76,13 @@
 					</p>
 				</div>
 
-				<Button variant="outline" size="sm" onclick={refreshKpis} disabled={$kpiLoading}>
-					<RefreshCw class="mr-2 size-4 {$kpiLoading ? 'animate-spin' : ''}" />
-					{$kpiLoading ? 'Actualisation...' : 'Actualiser'}
-				</Button>
+				<div class="flex items-center gap-4">
+					<RefreshTimer />
+					<Button variant="outline" size="sm" onclick={refreshKpis} disabled={$kpiLoading}>
+						<RefreshCw class="mr-2 size-4 {$kpiLoading ? 'animate-spin' : ''}" />
+						{$kpiLoading ? 'Actualisation ...' : 'Actualiser'}
+					</Button>
+				</div>
 			</div>
 
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
