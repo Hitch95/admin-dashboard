@@ -1,6 +1,6 @@
 <script>
 	// ============================================
-	// PARTIE 7 - SOLUTION : Ligne de transaction
+	// PARTIE 11 - TP : Context API
 	// ============================================
 
 	import * as Table from '$lib/components/ui/table/index.js';
@@ -12,6 +12,15 @@
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import { formatValue } from '$lib/utils.js';
+
+	// TODO 6 : Remplacer les props onView, onEdit, onDelete
+	// par un appel à getContext() :
+	//   import { getContext } from 'svelte';
+	//   import { TRANSACTION_ACTIONS_KEY } from '../../routes/+page.svelte';
+	//   const { handleView, handleEdit, handleDelete } = getContext(TRANSACTION_ACTIONS_KEY);
+	//
+	// Puis dans le template, remplacer onView/onEdit/onDelete
+	// par handleView/handleEdit/handleDelete
 
 	let { transaction, onView, onEdit, onDelete } = $props();
 
