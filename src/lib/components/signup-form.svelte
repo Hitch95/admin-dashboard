@@ -1,13 +1,13 @@
 <script>
-	import GalleryVerticalEndIcon from "lucide-svelte/icons/gallery-vertical-end";
-	import { cn } from "$lib/utils.js";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import * as Field from "$lib/components/ui/field/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
+	import GalleryVerticalEndIcon from 'lucide-svelte/icons/gallery-vertical-end';
+	import { cn } from '$lib/utils.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import * as Field from '$lib/components/ui/field/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
 	let { class: className, ...restProps } = $props();
 </script>
 
-<div class={cn("flex flex-col gap-6", className)} {...restProps}>
+<div class={cn('flex flex-col gap-6', className)} {...restProps}>
 	<form>
 		<Field.Group>
 			<div class="flex flex-col items-center gap-2 text-center">

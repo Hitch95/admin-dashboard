@@ -1,26 +1,22 @@
 <script>
-	import GalleryVerticalEndIcon from "lucide-svelte/icons/gallery-vertical-end";
+	import GalleryVerticalEndIcon from 'lucide-svelte/icons/gallery-vertical-end';
 	import {
 		FieldGroup,
 		Field,
 		FieldLabel,
 		FieldDescription,
-		FieldSeparator,
-	} from "$lib/components/ui/field/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import { cn } from "$lib/utils.js";
+		FieldSeparator
+	} from '$lib/components/ui/field/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { cn } from '$lib/utils.js';
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		...restProps
-	} = $props();
+	let { ref = $bindable(null), class: className, ...restProps } = $props();
 
 	const id = $props.id();
 </script>
 
-<div class={cn("flex flex-col gap-6", className)} bind:this={ref} {...restProps}>
+<div class={cn('flex flex-col gap-6', className)} bind:this={ref} {...restProps}>
 	<form>
 		<FieldGroup>
 			<div class="flex flex-col items-center gap-2 text-center">

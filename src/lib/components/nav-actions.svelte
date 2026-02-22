@@ -4,16 +4,11 @@
 	import DownloadIcon from 'lucide-svelte/icons/download';
 	import FilterIcon from 'lucide-svelte/icons/filter';
 	import PrinterIcon from 'lucide-svelte/icons/printer';
-	import RefreshCwIcon from 'lucide-svelte/icons/refresh-cw';
 	import ShareIcon from 'lucide-svelte/icons/share';
 	import SlidersHorizontalIcon from 'lucide-svelte/icons/sliders-horizontal';
 
 	const data = [
 		[
-			{
-				label: 'Actualiser',
-				icon: RefreshCwIcon
-			},
 			{
 				label: 'Période',
 				icon: CalendarIcon
@@ -65,17 +60,9 @@
 			open = true;
 		});
 	});
-
-	const lastUpdate = new Date(Date.now() - 600000).toLocaleTimeString('fr-FR', {
-		hour: '2-digit',
-		minute: '2-digit'
-	});
 </script>
 
 <div class="flex items-center gap-2 text-sm">
-	<div class="hidden font-medium text-muted-foreground md:inline-block">
-		Dernière maj : {lastUpdate}
-	</div>
 	<Button variant="ghost" size="icon" class="size-7">
 		<StarIcon />
 	</Button>

@@ -21,8 +21,10 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 11 - SOLUTION : Context API
+	// PARTIE 12 - TP : Lifecycle
 	// ============================================
+	// TODO 5 : Importer RefreshTimer depuis '$lib/components/refresh-timer.svelte'
+	//          et l'ajouter dans le header, à côté du bouton "Actualiser"
 
 	const iconMap = {
 		revenue: DollarSign,

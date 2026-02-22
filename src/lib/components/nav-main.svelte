@@ -1,8 +1,6 @@
 <script>
-	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-	let {
-		items,
-	} = $props();
+	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	let { items } = $props();
 </script>
 
 <Sidebar.Menu>
