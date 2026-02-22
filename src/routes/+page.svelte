@@ -10,6 +10,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { RefreshCw, DollarSign, Users, ShoppingCart, TrendingUp, Search, X } from 'lucide-svelte';
+	import { setContext } from 'svelte';
 
 	import { kpisWithChange, kpiSummary, kpiLoading, refreshKpis } from '$lib/stores/kpi-store.js';
 	import {
@@ -20,21 +21,8 @@
 	} from '$lib/stores/transactions-store.js';
 
 	// ============================================
-	// PARTIE 11 - TP : Context API
+	// PARTIE 11 - SOLUTION : Context API
 	// ============================================
-	// Actuellement, les callbacks onView/onEdit/onDelete transitent :
-	//   +page.svelte → TransactionsTable → TransactionRow
-	// TransactionsTable ne fait que les TRANSMETTRE sans les utiliser.
-	// C'est du "prop drilling".
-	//
-	// La Context API permet au composant descendant (TransactionRow)
-	// d'accéder directement aux handlers, sans passer par l'intermédiaire.
-
-	// TODO 1 : Importer setContext depuis 'svelte'
-	// TODO 2 : Créer une clé de contexte :
-	//   export const TRANSACTION_ACTIONS_KEY = Symbol('transactionActions');
-	// TODO 3 : Appeler setContext(TRANSACTION_ACTIONS_KEY, { handleView, handleEdit, handleDelete })
-	//   (après la définition des handlers ci-dessous)
 
 	const iconMap = {
 		revenue: DollarSign,
@@ -47,9 +35,7 @@
 	const handleEdit = (id) => alert(`Modifier la transaction #${id}`);
 	const handleDelete = (id) => transactions.remove(id);
 
-	// TODO 3 (suite) : setContext ici
-
-	// TODO 4 : Retirer les props onView, onEdit, onDelete de <TransactionsTable> ci-dessous
+	setContext('transactionActions', { handleView, handleEdit, handleDelete });
 </script>
 
 <Sidebar.Provider>
@@ -155,14 +141,7 @@
 				</div>
 			</div>
 
-			<!-- TODO 4 : Retirer onView, onEdit, onDelete ci-dessous -->
-			<TransactionsTable
-				transactions={$filteredTransactions}
-				loading={$kpiLoading}
-				onView={handleView}
-				onEdit={handleEdit}
-				onDelete={handleDelete}
-			/>
+			<TransactionsTable transactions={$filteredTransactions} loading={$kpiLoading} />
 		</div>
 	</Sidebar.Inset>
 </Sidebar.Provider>

@@ -1,28 +1,23 @@
 <script>
 	// ============================================
-	// PARTIE 11 - TP : Context API
+	// PARTIE 11 - SOLUTION : Context API
 	// ============================================
 
-	import * as Table from '$lib/components/ui/table/index.js';
-	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import { getContext } from 'svelte';
 	import MoreHorizontal from 'lucide-svelte/icons/more-horizontal';
 	import Eye from 'lucide-svelte/icons/eye';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
+
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as Table from '$lib/components/ui/table/index.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import { formatValue } from '$lib/utils.js';
 
-	// TODO 6 : Remplacer les props onView, onEdit, onDelete
-	// par un appel à getContext() :
-	//   import { getContext } from 'svelte';
-	//   import { TRANSACTION_ACTIONS_KEY } from '../../routes/+page.svelte';
-	//   const { handleView, handleEdit, handleDelete } = getContext(TRANSACTION_ACTIONS_KEY);
-	//
-	// Puis dans le template, remplacer onView/onEdit/onDelete
-	// par handleView/handleEdit/handleDelete
+	let { transaction } = $props();
 
-	let { transaction, onView, onEdit, onDelete } = $props();
+	const { handleView, handleEdit, handleDelete } = getContext('transactionActions');
 
 	const getStatusConfig = (status) => {
 		const config = {
@@ -61,16 +56,16 @@
 				{/snippet}
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content align="end">
-				<DropdownMenu.Item onclick={() => onView?.(transaction.id)}>
+				<DropdownMenu.Item onclick={() => handleView?.(transaction.id)}>
 					<Eye class="mr-2 size-4" />
 					Voir
 				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => onEdit?.(transaction.id)}>
+				<DropdownMenu.Item onclick={() => handleEdit?.(transaction.id)}>
 					<Pencil class="mr-2 size-4" />
 					Modifier
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item onclick={() => onDelete?.(transaction.id)}>
+				<DropdownMenu.Item onclick={() => handleDelete?.(transaction.id)}>
 					<Trash2 class="mr-2 size-4" />
 					Supprimer
 				</DropdownMenu.Item>
