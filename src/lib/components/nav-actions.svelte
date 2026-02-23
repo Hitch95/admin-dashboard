@@ -51,6 +51,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import EllipsisIcon from 'lucide-svelte/icons/ellipsis';
 	import StarIcon from 'lucide-svelte/icons/star';
+	import ThemeToggle from '$lib/components/theme-toggle.svelte';
 	import { untrack } from 'svelte';
 
 	let open = $state(false);
@@ -63,9 +64,7 @@
 </script>
 
 <div class="flex items-center gap-2 text-sm">
-	<!-- TODO 5 : Intégrer ThemeToggle dans la barre de navigation -->
-	<!--   import ThemeToggle from '$lib/components/theme-toggle.svelte'; -->
-	<!--   <ThemeToggle /> -->
+	<ThemeToggle />
 	<Button variant="ghost" size="icon" class="size-7">
 		<StarIcon />
 	</Button>
