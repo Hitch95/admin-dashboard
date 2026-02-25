@@ -85,9 +85,7 @@
 						{/snippet}
 
 						{#if card.id === 'revenue'}
-							{#snippet children()}
-								<p class="mt-2 text-xs text-muted-foreground">Objectif : 50 000 €</p>
-							{/snippet}
+							<p class="mt-2 text-xs text-muted-foreground">Objectif : 50 000 €</p>
 						{/if}
 					</StatCard>
 				{:else}
