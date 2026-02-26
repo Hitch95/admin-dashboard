@@ -90,24 +90,23 @@ git checkout part-03-conditional-solution
 
 | Partie | Sujet                | Branche de départ (TP)             | Branche Solution                         |
 | :----- | :------------------- | :--------------------------------- | :--------------------------------------- |
-| 02     | Reactivity           | -                                  | `part-02-reactivity-solution`            |
+| 02     | Reactivity           | `part-02-reactivity-tp`            | `part-02-reactivity-solution`            |
 | 03     | Conditionals         | `part-03-conditional-tp`           | `part-03-conditional-solution`           |
 | 04     | Each Loop            | `part-04-each-loop-tp`             | `part-04-each-loop-solution`             |
 | 05     | Props                | `part-05-props-tp`                 | `part-05-props-solution`                 |
-| 06     | Shadcn               | `part-06-shadcn-tp`                | `part-06-shadcn-solution`                |
-| 07     | Slots                | `part-07-slots-tp`                 | -                                        |
-| 08     | Table Actions        | -                                  | `part-08-table-actions-solution`         |
-| 09     | Store Writable       | `part-09-store-writable-tp`        | `part-09-store-writable-solution`        |
-| 10     | Store Derived        | `part-10-store-derived-tp`         | `part-10-store-derived-solution`         |
-| 11     | Custom Store         | `part-11-custom-store-tp`          | `part-11-custom-store-solution`          |
-| 12     | Context API          | `part-12-context-api-tp`           | `part-12-context-api-solution`           |
-| 13     | Lifecycle            | `part-13-lifecycle-tp`             | `part-13-lifecycle-solution`             |
-| 14     | Async                | `part-14-async-tp`                 | `part-14-async-solution`                 |
-| 15     | Forms Dialog         | `part-15-forms-dialog-tp`          | `part-15-forms-dialog-solution`          |
-| 16     | Async (Suite)        | `part-16-async-tp`                 | `part-16-async-solution`                 |
-| 17     | Forms Dialog (Suite) | `part-17-forms-dialog-tp`          | `part-17-forms-dialog-solution`          |
-| 18     | Progress Card        | `part-18-exercise-progresscard-tp` | `part-18-exercise-progresscard-solution` |
-| 19     | Theme                | `part-19-exercise-theme-tp`        | `part-19-exercise-theme-solution`        |
+| 06     | Slots                | `part-06-slots-tp`                 | `part-06-slots-solution`                 |
+| 08     | Table Actions        | `part-07-table-actions-tp`         | `part-07-table-actions-solution`         |
+| 09     | Store Writable       | `part-08-store-writable-tp`        | `part-08-store-writable-solution`        |
+| 10     | Store Derived        | `part-09-store-derived-tp`         | `part-09-store-derived-solution`         |
+| 11     | Custom Store         | `part-10-custom-store-tp`          | `part-10-custom-store-solution`          |
+| 12     | Context API          | `part-11-context-api-tp`           | `part-11-context-api-solution`           |
+| 13     | Lifecycle            | `part-12-lifecycle-tp`             | `part-12-lifecycle-solution`             |
+| 14     | Async                | `part-13-async-tp`                 | `part-13-async-solution`                 |
+| 15     | Forms Dialog         | `part-14-forms-dialog-tp`          | `part-14-forms-dialog-solution`          |
+| 16     | Async (Suite)        | `part-15-async-two-tp`             | `part-15-async-two-solution`             |
+| 17     | Forms Dialog (Suite) | `part-16-forms-dialog-two-tp`      | `part-16-forms-dialog-two-solution`      |
+| 18     | Progress Card        | `part-17-exercise-progresscard-tp` | `part-17-exercise-progresscard-solution` |
+| 19     | Theme                | `part-18-exercise-theme-tp`        | `part-18-exercise-theme-solution`        |
 
 _(Utilisez `git branch -a` pour voir toutes les branches disponibles si certaines manquent ici)_
 
